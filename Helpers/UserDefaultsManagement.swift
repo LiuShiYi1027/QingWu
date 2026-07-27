@@ -1,0 +1,1037 @@
+import Cocoa
+import Foundation
+
+extension Notification.Name {
+    static let editorModeChanged = Notification.Name("editorModeChanged")
+    static let preferencesChanged = Notification.Name("PreferencesChanged")
+    static let splitViewModeChanged = Notification.Name("SplitViewModeChanged")
+    static let alwaysOnTopChanged = Notification.Name("alwaysOnTopChanged")
+}
+// MARK: - App Identifier
+enum AppIdentifier {
+    static let bundleID: String = Bundle.main.bundleIdentifier ?? "com.tw93.miaoyan"
+    static let legacyBundleID: String = "com.tw93.miaoyan"
+
+    // xattr keys (follow bundleID, with legacy fallback for reading)
+    static var pinKey: String { "\(bundleID).pin" }
+    static var legacyPinKey: String { "\(legacyBundleID).pin" }
+    static var cursorKey: String { "\(bundleID).cursor" }
+    static var legacyCursorKey: String { "\(legacyBundleID).cursor" }
+
+    // NSAttributedString.Key (image metadata in attributed strings)
+    static var imagePathKey: String { "\(bundleID).image.path" }
+    static var imageURLKey: String { "\(bundleID).image.url" }
+    static var imageTitleKey: String { "\(bundleID).image.title" }
+
+    // NSAttributedString.Key (internal, fixed identifiers)
+    static let todoKey = "\(legacyBundleID).image.todo"
+    static let codeBlockKey = "\(legacyBundleID).code.block"
+    static let codeLanguageKey = "\(legacyBundleID).code.language"
+
+    // CloudKit sync key (fixed, shared across devices)
+    static let cloudPinsKey = "\(legacyBundleID).pins.shared"
+}
+
+enum StorageLocationValidator {
+    static func validateWritableDirectory(_ url: URL) throws {
+        let fm = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard fm.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            throw StorageLocationValidationError.notDirectory
+        }
+
+        do {
+            _ = try fm.contentsOfDirectory(
+                at: url,
+                includingPropertiesForKeys: [.isDirectoryKey],
+                options: [.skipsHiddenFiles]
+            )
+        } catch {
+            throw StorageLocationValidationError.cannotRead
+        }
+
+        let checkURL = url.appendingPathComponent(".miaoyan-folder-check-\(UUID().uuidString)", isDirectory: false)
+        do {
+            try Data("MiaoYan folder check\n".utf8).write(to: checkURL, options: .atomic)
+            try fm.removeItem(at: checkURL)
+        } catch {
+            try? fm.removeItem(at: checkURL)
+            throw StorageLocationValidationError.cannotWrite
+        }
+    }
+}
+
+enum StorageLocationValidationError: Error {
+    case notDirectory
+    case cannotRead
+    case cannotWrite
+
+    @MainActor
+    var localizedMessage: String {
+        switch self {
+        case .notDirectory:
+            return I18n.str("Selected storage folder is not a folder.")
+        case .cannotRead:
+            return I18n.str("MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder.")
+        case .cannotWrite:
+            return I18n.str("MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app.")
+        }
+    }
+}
+
+@MainActor
+public enum UserDefaultsManagement {
+    typealias Color = NSColor
+    typealias Image = NSImage
+    typealias Font = NSFont
+    static var DefaultFont = "TsangerJinKai02-W04"
+    static var DefaultFontSize = 16
+    static var DefaultPreviewFontSize = 16
+    static var DefaultPresentationFontSize = 24
+    static let FullWidthValue = "Full Width"
+    static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
+    static var DefaultBgColor = Color.white
+    static var lineWidth = 1000
+    static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
+    static var fullScreen = false
+    static var isWillFullScreen = false
+    static var editorLineSpacing = 3.0
+    static var editorLineHeight = 1.3
+    static var editorLetterSpacing = 0.5
+    static var windowLetterSpacing = 0.6
+    static var titleFontSize = 20
+    static var emptyEditTitleFontSize = 36
+    static var nameFontSize = 14
+    static var searchFontSize = 12
+    static var dateFontSize = 11
+    static var marginSize = 24
+    static var realSidebarSize = 138
+    static var sidebarSize = 280
+    static var isOnExport = false
+    static var isOnExportPPT = false
+    static var isOnExportHtml = false
+    private enum Constants {
+        static let AppearanceTypeKey = "appearanceType"
+        static let BgColorKey = "bgColorKeyed"
+
+        static let CodeFontNameKey = "codeFont"
+        static let FontNameKey = "font"
+        static let FontSizeKey = "fontsize"
+        static let FontColorKey = "fontColorKeyed"
+        static let FullScreen = "fullScreen"
+        static let NoteType = "noteType"
+        static let ImagesWidthKey = "imagesWidthKey"
+        static let DefaultLanguageKey = "defaultLanguage"
+        static let DefaultPicUpload = "defaultPicUpload"
+        static let ImportURLsKey = "ImportURLs"
+        static let LastSelectedPath = "lastSelectedPath"
+        static let LastProject = "lastProject"
+        static let LineSpacingEditorKey = "lineSpacingEditor"
+        static let LineWidthKey = "lineWidth"
+        static let MarginSizeKey = "marginSize"
+        static let MarkdownPreviewCSS = "markdownPreviewCSS"
+        static let PreviewFontSize = "previewFontSize"
+        static let PresentationFontSize = "presentationFontSize"
+        static let ProjectsKey = "projects"
+        static let RestoreCursorPosition = "restoreCursorPosition"
+        static let SaveInKeychain = "saveInKeychain"
+        static let SortBy = "sortBy"
+        static let StoragePathKey = "storageUrl"
+        static let FontName = "fontName"
+        static let WindowFontName = "windowFontName"
+        static let PreviewFontName = "previewFontName"
+        static let IsFirstLaunch = "isFirstLaunch"
+        static let SortDirection = "sortDirection"
+        static let IsSingleMode = "isSingleMode"
+        static let SingleModePath = "singleModePath"
+        static let SingleModeBookmark = "singleModeBookmark"
+        static let SingleModeAccessBookmark = "singleModeAccessBookmark"
+        static let PreviewWidth = "previewWidth"
+        static let PreviewLocation = "previewLocation"
+        static let EditorLineBreak = "editorLineBreak"
+        static let ButtonShow = "buttonShow"
+        static let NotesTableScrollPosition = "notesTableScrollPosition"
+        static let AlwaysOnTop = "alwaysOnTop"
+        static let HasShownImagePreviewTip = "hasShownImagePreviewTip"
+        static let SplitViewMode = "splitViewMode"
+        static let EditorContentSplitPosition = "editorContentSplitPosition"
+        static let EditorModeKey = "editorMode"
+    }
+
+    private static func resolvedFontName(forKey key: String) -> String {
+        if let stored = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespacesAndNewlines),
+            !stored.isEmpty,
+            NSFont(name: stored, size: 12) != nil
+        {
+            return stored
+        }
+
+        // Use centralized font configuration
+        let defaultFont: String
+        switch key {
+        case Constants.CodeFontNameKey:
+            defaultFont = FontConfiguration.defaultCodeFont
+        case Constants.WindowFontName:
+            defaultFont = FontConfiguration.defaultInterfaceFont
+        case Constants.PreviewFontName:
+            defaultFont = FontConfiguration.defaultPreviewFont
+        default:
+            defaultFont = FontConfiguration.defaultEditorFont
+        }
+        UserDefaults.standard.set(defaultFont, forKey: key)
+        return defaultFont
+    }
+
+    static var appearanceType: AppearanceType {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.AppearanceTypeKey) as? Int {
+                return AppearanceType(rawValue: result)!
+            }
+            return AppearanceType.System
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: Constants.AppearanceTypeKey)
+        }
+    }
+    static var lastProject: Int {
+        get {
+            UserDefaults.standard.object(forKey: Constants.LastProject) as? Int ?? 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.LastProject)
+        }
+    }
+    static var defaultLanguage: Int {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.DefaultLanguageKey) as? Int {
+                return dl
+            }
+            guard let lang = Locale.preferredLanguages.first else { return 1 }
+            if lang.hasPrefix("zh-Hans") { return 0 }
+            if lang.hasPrefix("zh-Hant") { return 3 }
+            if lang.hasPrefix("ja") { return 2 }
+            return 1
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)
+        }
+    }
+    static var defaultPicUpload: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.DefaultPicUpload) as? String {
+                return dl
+            }
+            return "None"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.DefaultPicUpload)
+        }
+    }
+    static var editorLineBreak: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.EditorLineBreak) as? String {
+                return dl
+            }
+            return "MiaoYan"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.EditorLineBreak)
+        }
+    }
+    static var buttonShow: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.ButtonShow) as? String {
+                return dl
+            }
+            return "Always"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.ButtonShow)
+        }
+    }
+
+    static var alwaysOnTop: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.AlwaysOnTop) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.AlwaysOnTop)
+        }
+    }
+
+    static var imagePreviewTipShowCount: Int {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.HasShownImagePreviewTip) as? Int {
+                return result
+            }
+            return 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.HasShownImagePreviewTip)
+        }
+    }
+
+    static var isFirstLaunch: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.IsFirstLaunch) as? Bool {
+                return result
+            }
+            return true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.IsFirstLaunch)
+        }
+    }
+
+    static var hasCreatedInitContent: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasCreatedInitContent") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasCreatedInitContent") }
+    }
+
+    static var hasFixedInitialization: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasFixedInitialization")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "hasFixedInitialization")
+        }
+    }
+
+    static var hasMigratedFontDefaults: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasMigratedFontDefaults_v2") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasMigratedFontDefaults_v2") }
+    }
+
+    static var hasMigratedCodeFontDefault: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasMigratedCodeFontDefault_v1") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasMigratedCodeFontDefault_v1") }
+    }
+
+    static func migrateFontDefaultsIfNeeded() {
+        if !hasMigratedCodeFontDefault {
+            hasMigratedCodeFontDefault = true
+            let handwrittenCodeFonts = [
+                FontConfiguration.defaultEditorFont,
+                FontConfiguration.defaultInterfaceFont,
+                FontConfiguration.defaultPreviewFont,
+                "TsangerJinKai02-W04",
+            ]
+            let storedCode = UserDefaults.standard.string(forKey: Constants.CodeFontNameKey) ?? ""
+            if storedCode.isEmpty || handwrittenCodeFonts.contains(storedCode) {
+                UserDefaults.standard.set(FontConfiguration.defaultCodeFont, forKey: Constants.CodeFontNameKey)
+            }
+        }
+
+        guard !hasMigratedFontDefaults else { return }
+        hasMigratedFontDefaults = true
+
+        if let storedSize = UserDefaults.standard.object(forKey: Constants.FontSizeKey) as? Int, storedSize < 14 {
+            UserDefaults.standard.set(DefaultFontSize, forKey: Constants.FontSizeKey)
+        }
+
+        if let storedPreviewSize = UserDefaults.standard.object(forKey: Constants.PreviewFontSize) as? Int, storedPreviewSize < 14 {
+            UserDefaults.standard.set(DefaultPreviewFontSize, forKey: Constants.PreviewFontSize)
+        }
+    }
+
+    static var hasShownTOCTip: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasShownTOCTip")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "hasShownTOCTip")
+        }
+    }
+
+    static var isSingleMode: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.IsSingleMode) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.IsSingleMode)
+        }
+    }
+    static var singleModePath: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.SingleModePath) as? String {
+                return dl
+            }
+            return ""
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SingleModePath)
+        }
+    }
+    static var singleModeBookmark: Data? {
+        get {
+            UserDefaults.standard.data(forKey: Constants.SingleModeBookmark)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SingleModeBookmark)
+        }
+    }
+    static var singleModeAccessBookmark: Data? {
+        get {
+            UserDefaults.standard.data(forKey: Constants.SingleModeAccessBookmark)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SingleModeAccessBookmark)
+        }
+    }
+
+    private static func resolveSecurityScopedURL(
+        bookmarkData: Data?,
+        bookmarkKey: String,
+        context: String,
+        resolveSymlinks: Bool = true
+    ) -> URL? {
+        guard let bookmarkData else {
+            return nil
+        }
+
+        var isStale = false
+        do {
+            let url = try URL(
+                resolvingBookmarkData: bookmarkData,
+                options: .withSecurityScope,
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale)
+            if isStale {
+                do {
+                    let newBookmark = try url.bookmarkData(
+                        options: .withSecurityScope,
+                        includingResourceValuesForKeys: nil,
+                        relativeTo: nil)
+                    UserDefaults.standard.set(newBookmark, forKey: bookmarkKey)
+                } catch {
+                    AppDelegate.trackError(error, context: "\(context).refreshStaleBookmark")
+                }
+            }
+            return resolveSymlinks ? url.resolvingSymlinksInPath() : url
+        } catch {
+            AppDelegate.trackError(error, context: "\(context).resolveBookmark")
+        }
+
+        return nil
+    }
+
+    static var singleModeURL: URL? {
+        if let url = resolveSecurityScopedURL(
+            bookmarkData: singleModeBookmark,
+            bookmarkKey: Constants.SingleModeBookmark,
+            context: "UserDefaultsManagement.singleModeURL"
+        ) {
+            return url
+        }
+
+        guard !singleModePath.isEmpty else {
+            return nil
+        }
+
+        return URL(fileURLWithPath: singleModePath).resolvingSymlinksInPath()
+    }
+
+    static var singleModeScopeURL: URL? {
+        if let url = resolveSecurityScopedURL(
+            bookmarkData: singleModeAccessBookmark,
+            bookmarkKey: Constants.SingleModeAccessBookmark,
+            context: "UserDefaultsManagement.singleModeScopeURL",
+            resolveSymlinks: false
+        ) {
+            return url
+        }
+
+        guard let resolvedURL = singleModeURL else {
+            return nil
+        }
+
+        let accessURL = FileManager.default.directoryExists(atUrl: resolvedURL) ? resolvedURL : resolvedURL.deletingLastPathComponent()
+
+        do {
+            singleModeAccessBookmark = try accessURL.bookmarkData(
+                options: .withSecurityScope,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil)
+            return accessURL
+        } catch {
+            AppDelegate.trackError(error, context: "UserDefaultsManagement.singleModeScopeURL.createAccessBookmark")
+            return resolvedURL
+        }
+    }
+
+    static func beginSingleMode(for url: URL) {
+        let resolvedURL = url.resolvingSymlinksInPath()
+        let bookmarkURL = url
+        let accessBookmarkURL =
+            FileManager.default.directoryExists(atUrl: bookmarkURL)
+            ? bookmarkURL
+            : bookmarkURL.deletingLastPathComponent()
+        singleModePath = resolvedURL.path
+        isSingleMode = true
+
+        do {
+            singleModeBookmark = try bookmarkURL.bookmarkData(
+                options: .withSecurityScope,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil)
+        } catch {
+            singleModeBookmark = nil
+            AppDelegate.trackError(error, context: "UserDefaultsManagement.beginSingleMode.bookmarkData")
+        }
+
+        do {
+            singleModeAccessBookmark = try accessBookmarkURL.bookmarkData(
+                options: .withSecurityScope,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil)
+        } catch {
+            singleModeAccessBookmark = nil
+            AppDelegate.trackError(error, context: "UserDefaultsManagement.beginSingleMode.accessBookmarkData")
+        }
+    }
+
+    static func clearSingleMode() {
+        isSingleMode = false
+        singleModePath = ""
+        singleModeBookmark = nil
+        singleModeAccessBookmark = nil
+    }
+    static var sortDirection: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.SortDirection) as? Bool {
+                return result
+            }
+            return true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SortDirection)
+        }
+    }
+    static var fontSize: Int {
+        get {
+            UserDefaults.standard.object(forKey: Constants.FontSizeKey) as? Int ?? DefaultFontSize
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.FontSizeKey)
+        }
+    }
+    static var previewWidth: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PreviewWidth) as? String {
+                return result
+            }
+            return "1000px"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PreviewWidth)
+        }
+    }
+    static var previewLocation: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PreviewLocation) as? String {
+                return result
+            }
+            return "Editing"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PreviewLocation)
+        }
+    }
+    static var previewFontSize: Int {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontSize) as? Int {
+                return result
+            }
+            return DefaultPreviewFontSize
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontSize)
+        }
+    }
+    static var presentationFontSize: Int {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PresentationFontSize) as? Int {
+                return result
+            }
+            return DefaultPresentationFontSize
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PresentationFontSize)
+        }
+    }
+    static var fontName: String {
+        get { resolvedFontName(forKey: Constants.FontName) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.FontName) }
+    }
+    static var windowFontName: String {
+        get { resolvedFontName(forKey: Constants.WindowFontName) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.WindowFontName) }
+    }
+    static var previewFontName: String {
+        get { resolvedFontName(forKey: Constants.PreviewFontName) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontName) }
+    }
+    static var codeFontName: String {
+        get { resolvedFontName(forKey: Constants.CodeFontNameKey) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey) }
+    }
+    static var codeFont: Font! {
+        get {
+            if let font = Font(name: codeFontName, size: CGFloat(fontSize)) {
+                return font
+            }
+            return Font.userFixedPitchFont(ofSize: CGFloat(fontSize)) ?? Font.systemFont(ofSize: CGFloat(fontSize))
+        }
+        set {
+            guard let newValue = newValue else { return }
+            codeFontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
+        }
+    }
+    static var noteFont: Font! {
+        get {
+            return FontConfiguration.editorFont(size: CGFloat(fontSize))
+        }
+        set {
+            guard let newValue = newValue else { return }
+            fontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
+        }
+    }
+    static var titleFont: Font! {
+        return FontConfiguration.interfaceFont(size: CGFloat(titleFontSize))
+    }
+    static var emptyEditTitleFont: Font! {
+        return FontConfiguration.interfaceFont(size: CGFloat(emptyEditTitleFontSize))
+    }
+    static var nameFont: Font! {
+        return FontConfiguration.interfaceFont(size: CGFloat(nameFontSize))
+    }
+    static var searchFont: Font! {
+        return FontConfiguration.interfaceFont(size: CGFloat(searchFontSize))
+    }
+    static var dateFont: Font! {
+        return FontConfiguration.interfaceFont(size: CGFloat(dateFontSize))
+    }
+    static var fontColor: Color {
+        get {
+            if let returnFontColor = UserDefaults.standard.data(forKey: Constants.FontColorKey),
+                let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnFontColor)
+            {
+                return color
+            } else {
+                return DefaultFontColor
+            }
+        }
+        set {
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                UserDefaults.standard.set(data, forKey: Constants.FontColorKey)
+            }
+        }
+    }
+    static var bgColor: Color {
+        get {
+            if let returnBgColor = UserDefaults.standard.data(forKey: Constants.BgColorKey),
+                let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnBgColor)
+            {
+                return color
+            } else {
+                return DefaultBgColor
+            }
+        }
+        set {
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                UserDefaults.standard.set(data, forKey: Constants.BgColorKey)
+            }
+        }
+    }
+
+    // Cache to avoid multiple permission dialogs
+    private static var _cachedICloudURL: URL?
+    private static var _iCloudURLChecked = false
+
+    static var iCloudDocumentsContainer: URL? {
+        if _iCloudURLChecked {
+            return _cachedICloudURL
+        }
+        _iCloudURLChecked = true
+
+        if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
+            if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
+                do {
+                    try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
+                    _cachedICloudURL = iCloudDocumentsURL.resolvingSymlinksInPath()
+                    return _cachedICloudURL
+                } catch {
+                    AppDelegate.trackError(error, context: "UserDefaultsManagement.iCloudDocumentsContainer creation failed")
+                }
+            } else {
+                _cachedICloudURL = iCloudDocumentsURL.resolvingSymlinksInPath()
+                return _cachedICloudURL
+            }
+        }
+        return nil
+    }
+
+    // Cache for local Documents
+    private static var _cachedLocalDocumentsURL: URL?
+    private static var _localDocumentsChecked = false
+
+    static var localDocumentsContainer: URL? {
+        if _localDocumentsChecked {
+            return _cachedLocalDocumentsURL
+        }
+        _localDocumentsChecked = true
+
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+            let miaoyanPath: String = path + "/MiaoYan"
+            try? FileManager.default.createDirectory(
+                atPath: miaoyanPath,
+                withIntermediateDirectories: true, attributes: nil)
+            _cachedLocalDocumentsURL = URL(fileURLWithPath: miaoyanPath)
+            return _cachedLocalDocumentsURL
+        }
+        return nil
+    }
+    static var storagePath: String? {
+        get {
+            if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) as? String {
+                if FileManager.default.isWritableFile(atPath: storagePath) {
+                    return storagePath
+                } else {
+                    let error = NSError(domain: "StorageError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Storage path not accessible, resetting to default"])
+                    AppDelegate.trackError(error, context: "UserDefaultsManagement.storagePath")
+                }
+            }
+            if let iCloudDocumentsURL = iCloudDocumentsContainer {
+                return iCloudDocumentsURL.path
+            }
+            return localDocumentsContainer?.path
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.StoragePathKey)
+        }
+    }
+    static var storageBookmark: Data? {
+        get {
+            return UserDefaults.standard.data(forKey: "StorageBookmark")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "StorageBookmark")
+        }
+    }
+
+    static var storageUrl: URL? {
+        if let bookmarkData = storageBookmark {
+            var isStale = false
+            do {
+                let url = try URL(
+                    resolvingBookmarkData: bookmarkData,
+                    options: .withSecurityScope,
+                    relativeTo: nil,
+                    bookmarkDataIsStale: &isStale)
+                if isStale {
+                    do {
+                        let newBookmark = try url.bookmarkData(
+                            options: .withSecurityScope,
+                            includingResourceValuesForKeys: nil,
+                            relativeTo: nil)
+                        storageBookmark = newBookmark
+                    } catch {
+                        AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.refreshStaleBookmark")
+                    }
+                }
+                return url
+            } catch {
+                AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.resolveBookmark")
+            }
+        }
+
+        if let path = storagePath {
+            let expanded = NSString(string: path).expandingTildeInPath
+            return URL(fileURLWithPath: expanded).resolvingSymlinksInPath()
+        }
+
+        return nil
+    }
+    // MARK: - Editor Mode Management
+    /// Editor mode enumeration
+    enum EditorMode: String, CaseIterable {
+        case normal  // Normal editing mode
+        case preview  // Preview mode
+        case presentation  // Presentation mode
+        case ppt  // PPT mode
+    }
+    /// Editor state manager - internal implementation
+    private class EditorStateManager {
+        @MainActor static let shared = EditorStateManager()
+        private var _currentMode: EditorMode = .normal
+        private init() {
+            // Read from UserDefaults
+            if let storedMode = UserDefaults.standard.string(forKey: Constants.EditorModeKey),
+                let mode = EditorMode(rawValue: storedMode)
+            {
+                _currentMode = mode
+            } else {
+                _currentMode = .normal
+            }
+        }
+        var currentMode: EditorMode {
+            get { return _currentMode }
+            set {
+                let oldMode = _currentMode
+                _currentMode = newValue
+
+                // Save to UserDefaults
+                UserDefaults.standard.set(newValue.rawValue, forKey: Constants.EditorModeKey)
+
+                // Send mode change notification
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: .editorModeChanged,
+                        object: newValue,
+                        userInfo: ["previousMode": oldMode]
+                    )
+                }
+            }
+        }
+        var isPreviewMode: Bool { return _currentMode == .preview || _currentMode == .ppt }
+        var isPresentationMode: Bool { return _currentMode == .presentation || _currentMode == .ppt }
+        var isPPTMode: Bool { return _currentMode == .ppt }
+        var isInSpecialMode: Bool { return _currentMode != .normal }
+        var canUseMenu: Bool { return _currentMode != .presentation && _currentMode != .ppt }
+        func setMode(_ mode: EditorMode) {
+            currentMode = mode
+        }
+        func reset() {
+            currentMode = .normal
+        }
+    }
+    // Public interface - non-persistent state, reset on each startup
+    static var preview: Bool {
+        get {
+            return EditorStateManager.shared.isPreviewMode
+        }
+        set {
+            if newValue && !EditorStateManager.shared.isPPTMode {
+                EditorStateManager.shared.setMode(.preview)
+            } else if !newValue && EditorStateManager.shared.currentMode == .preview {
+                EditorStateManager.shared.setMode(.normal)
+            }
+        }
+    }
+    static var presentation: Bool {
+        get {
+            return EditorStateManager.shared.isPresentationMode
+        }
+        set {
+            if newValue && !EditorStateManager.shared.isPPTMode {
+                EditorStateManager.shared.setMode(.presentation)
+            } else if !newValue && EditorStateManager.shared.currentMode == .presentation {
+                EditorStateManager.shared.setMode(.normal)
+            }
+        }
+    }
+
+    static var magicPPT: Bool {
+        get {
+            return EditorStateManager.shared.isPPTMode
+        }
+        set {
+            EditorStateManager.shared.setMode(newValue ? .ppt : .normal)
+        }
+    }
+
+    static var splitViewMode: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.SplitViewMode) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            let oldValue = splitViewMode
+            guard oldValue != newValue else { return }
+            UserDefaults.standard.set(newValue, forKey: Constants.SplitViewMode)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .splitViewModeChanged, object: nil)
+            }
+        }
+    }
+    static var editorContentSplitPosition: Double {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.EditorContentSplitPosition) {
+                if let ratio = result as? Double {
+                    return ratio
+                }
+                if let legacyWidth = result as? Int, legacyWidth > 0 {
+                    // Old absolute width value - reset to default 50/50
+                    UserDefaults.standard.removeObject(forKey: Constants.EditorContentSplitPosition)
+                    return 0
+                }
+            }
+            return 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.EditorContentSplitPosition)
+        }
+    }
+    // Convenience properties
+    static var isInSpecialMode: Bool {
+        return EditorStateManager.shared.isInSpecialMode
+    }
+    static var canUseMenu: Bool {
+        return EditorStateManager.shared.canUseMenu
+    }
+    // Reset editor state
+    static func resetEditorState() {
+        EditorStateManager.shared.reset()
+    }
+    // Get current editor mode
+    static var currentEditorMode: EditorMode {
+        return EditorStateManager.shared.currentMode
+    }
+    static var lastSync: Date? {
+        get {
+            if let sync = UserDefaults.standard.object(forKey: "lastSync") {
+                return sync as? Date
+            } else {
+                return nil
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "lastSync")
+        }
+    }
+
+    static var sort: SortBy {
+        get {
+            guard let raw = UserDefaults.standard.object(forKey: "sortBy") as? String,
+                let sortBy = SortBy(rawValue: raw)
+            else {
+                return .creationDate
+            }
+            return sortBy
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: "sortBy")
+        }
+    }
+    static var lastSelectedURL: URL? {
+        get {
+            guard let path = UserDefaults.standard.object(forKey: Constants.LastSelectedPath) as? String else {
+                return nil
+            }
+            if path.hasPrefix("file://") {
+                return URL(string: path)
+            }
+            return URL(fileURLWithPath: path)
+        }
+        set {
+            if let url = newValue {
+                UserDefaults.standard.set(url.path, forKey: Constants.LastSelectedPath)
+            } else {
+                UserDefaults.standard.set(nil, forKey: Constants.LastSelectedPath)
+            }
+        }
+    }
+    static var restoreCursorPosition = true
+    static var imagesWidth: Float {
+        get {
+            UserDefaults.standard.object(forKey: Constants.ImagesWidthKey) as? Float ?? 300
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.ImagesWidthKey)
+        }
+    }
+
+    static var projects: [URL] {
+        get {
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return []
+            }
+            if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL] {
+                return urls
+            }
+            return []
+        }
+        set {
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return
+            }
+            let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+            defaults.set(data, forKey: Constants.ProjectsKey)
+        }
+    }
+    static var importURLs: [URL] {
+        get {
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return []
+            }
+            if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data,
+                let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL]
+            {
+                return urls
+            }
+            return []
+        }
+        set {
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return
+            }
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                defaults.set(data, forKey: Constants.ImportURLsKey)
+            }
+        }
+    }
+    static var markdownPreviewCSS: URL? {
+        get {
+            if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
+                let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+            {
+                if FileManager.default.fileExists(atPath: path) {
+                    return URL(string: "file://" + encodedPath)
+                }
+            }
+            return nil
+        }
+        set {
+            if let url = newValue {
+                UserDefaults.standard.set(url.path, forKey: Constants.MarkdownPreviewCSS)
+            } else {
+                UserDefaults.standard.set(nil, forKey: Constants.MarkdownPreviewCSS)
+            }
+        }
+    }
+    private static func scrollPositionKey(for projectURL: URL?) -> String {
+        projectURL?.path ?? "__all__"
+    }
+
+    static func notesTableScrollPosition(for projectURL: URL?) -> CGFloat {
+        guard let stored = UserDefaults.standard.dictionary(forKey: Constants.NotesTableScrollPosition) as? [String: Double] else {
+            return 0.0
+        }
+        let key = scrollPositionKey(for: projectURL)
+        if let value = stored[key] {
+            return CGFloat(value)
+        }
+        return 0.0
+    }
+
+    static func setNotesTableScrollPosition(_ value: CGFloat, for projectURL: URL?) {
+        var stored = UserDefaults.standard.dictionary(forKey: Constants.NotesTableScrollPosition) as? [String: Double] ?? [:]
+        let key = scrollPositionKey(for: projectURL)
+        if value == 0 {
+            stored.removeValue(forKey: key)
+        } else {
+            stored[key] = Double(value)
+        }
+        UserDefaults.standard.set(stored, forKey: Constants.NotesTableScrollPosition)
+    }
+}

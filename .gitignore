@@ -1,0 +1,115 @@
+# ====================
+# Xcode & iOS Development
+# ====================
+
+# User-specific Xcode files
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+MiaoYan.xcworkspace/xcuserdata/*
+MiaoYan.xcworkspace/xcshareddata/*
+MiaoYan.xcodeproj/xcuserdata/*
+
+# Build artifacts and derivatives
+DerivedData/
+.build/
+build/
+_build/
+temp_check_keys/
+*.dSYM
+*.dSYM.zip
+*.app.dSYM.zip
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved.backup
+
+# Playgrounds
+*.playground
+
+# ====================
+# CocoaPods & Dependencies
+# ====================
+Pods/
+Podfile.lock
+
+# ====================
+# macOS System Files
+# ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ====================
+# Development Tools & IDEs
+# ====================
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+.idea/
+*.swp
+*.swo
+~*
+
+# Local Claude Code overrides
+CLAUDE.local.md
+
+# ====================
+# Node.js & Web Development
+# ====================
+node_modules/
+package-lock.json
+.husky/
+
+# ====================
+# Temporary & Backup Files
+# ====================
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*~
+.#*
+\#*#
+
+# ====================
+# Logs & Debug Files
+# ====================
+*.log
+*.out
+*.err
+
+# ====================
+# Project Specific
+# ====================
+# Release & Distribution
+/Releases/
+/Release/
+/dist/
+*.ipa
+appcast.xml
+
+# Documentation & Demo files
+docs/
+index.html
+Resources/DownView.bundle/demo.html
+
+# Legacy & Deprecated
+IrEditor/
+fonts/
+
+# AI agent files
+# CLAUDE.md and AGENTS.md are committed (CLAUDE.md is a symlink to AGENTS.md);
+# only the per-user overrides and private skills stay local.
+CLAUDE.local.md
+AGENTS.override.md
+.claude/
+.agents/settings.local.json
+
+# Local AI Assistant files
+journal/
