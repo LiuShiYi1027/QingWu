@@ -46,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         if let display = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String {
             return display
         }
-        return Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String ?? "MiaoYan"
+        return Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String ?? "QingWu"
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
@@ -57,7 +57,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         storage.loadDocuments {}
     }
 
-    // Attempt to migrate preferences from the old suite "com.tw93.MiaoYan" to the standard suite
+    // Attempt to migrate preferences from the old suite "com.tw93.MiaoYan" to the standard suite.
+    // "com.tw93.MiaoYan" is the legacy suite of upstream MiaoYan; keep it so existing
+    // upstream users' preferences migrate over on first launch.
     private func migratePreferences() {
         let migrationKey = "HasMigratedFromOldSuite"
         let standardDefaults = UserDefaults.standard
@@ -141,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             self?.normalizeMainWindowFrame(window)
         }
 
-        mainWC.applyMiaoYanAppearance()
+        mainWC.applyQingWuAppearance()
 
         // Failsafe: Ensure window reveals after 3 seconds even if list loading hangs or fails
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
@@ -268,7 +270,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         } else {
             message = error.localizedDescription
         }
-        MiaoYanAlert.show(
+        QingWuAlert.show(
             message: I18n.str("Could not use this folder"),
             informativeText: message,
             style: .warning,

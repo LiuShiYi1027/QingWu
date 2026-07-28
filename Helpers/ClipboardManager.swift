@@ -238,7 +238,7 @@ class ClipboardManager {
         do {
             try process.run()
         } catch {
-            print("MiaoYan Shell Error: \(error)")
+            print("QingWu Shell Error: \(error)")
             return nil
         }
 
@@ -286,16 +286,16 @@ class ClipboardManager {
             DispatchQueue.global(qos: .utility).async {
                 semaphore.wait()
                 if !result.errorData.isEmpty, let errorStr = String(data: result.errorData, encoding: .utf8) {
-                    print("MiaoYan Shell Stderr: \(errorStr)")
+                    print("QingWu Shell Stderr: \(errorStr)")
                 }
             }
-            print("MiaoYan Shell Timeout: Command exceeded 10 seconds")
+            print("QingWu Shell Timeout: Command exceeded 10 seconds")
             return nil
         }
 
         // Print stderr if any
         if !result.errorData.isEmpty, let errorStr = String(data: result.errorData, encoding: .utf8) {
-            print("MiaoYan Shell Stderr: \(errorStr)")
+            print("QingWu Shell Stderr: \(errorStr)")
         }
 
         return String(data: result.outputData, encoding: .utf8)

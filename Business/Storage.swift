@@ -787,11 +787,11 @@ class Storage {
         // File distribution mapping
         let fileMapping: [String: [String]] = [
             "Guide": [
-                isChinese ? "介绍妙言.md" : "Introduction to MiaoYan.md"
+                isChinese ? "介绍青梧.md" : "Introduction to QingWu.md"
             ],
             "Examples": [
-                isChinese ? "妙言 PPT.md" : "MiaoYan PPT.md",
-                isChinese ? "妙言 Markdown 语法指南.md" : "MiaoYan Markdown Syntax Guide.md",
+                isChinese ? "青梧 PPT.md" : "QingWu PPT.md",
+                isChinese ? "青梧 Markdown 语法指南.md" : "QingWu Markdown Syntax Guide.md",
             ],
             "Notes": [
                 isChinese ? "欢迎使用.md" : "Welcome.md"
@@ -884,7 +884,7 @@ class Storage {
         // it in the in-memory list and the sidebar so the user does not see
         // it disappear from the UI while the file is still on disk. Without
         // this ordering a denied permission, full Trash, or iCloud stall
-        // would silently make the note vanish from MiaoYan but persist as
+        // would silently make the note vanish from QingWu but persist as
         // an orphan file.
         var removed = [URL: URL]()
         var succeeded = [Note]()
@@ -914,7 +914,7 @@ class Storage {
 
         if failedCount > 0 {
             let warning = NSError(
-                domain: "com.tw93.miaoyan.delete",
+                domain: "com.qingwu.app.delete",
                 code: 1,
                 userInfo: [NSLocalizedDescriptionKey: "removeNotes: \(failedCount) of \(notes.count) failed"])
             AppDelegate.trackError(warning, context: "Storage.removeNotes.partialFailure")

@@ -47,8 +47,8 @@ public enum SortBy: String {
 
 // MARK: - Attribute Types
 enum NoteAttribute {
-    static let highlight = NSAttributedString.Key(rawValue: "com.tw93.search.highlight")
-    static let autoLink = NSAttributedString.Key(rawValue: "com.tw93.link.autodetected")
+    static let highlight = NSAttributedString.Key(rawValue: "com.qingwu.app.search.highlight")
+    static let autoLink = NSAttributedString.Key(rawValue: "com.qingwu.app.link.autodetected")
 
     static let all = Set<NSAttributedString.Key>([
         highlight,
@@ -72,7 +72,7 @@ extension NSAttributedString.Key {
 
 // MARK: - Configuration Types
 struct KeychainConfiguration {
-    static let serviceName = "MiaoYanApp"
+    static let serviceName = "QingWuApp"
     static let accessGroup: String? = nil
 }
 

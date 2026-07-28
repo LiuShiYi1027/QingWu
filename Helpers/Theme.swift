@@ -308,20 +308,20 @@ enum Theme {
 
 @MainActor
 extension NSView {
-    func applyMiaoYanPaneBackground() {
+    func applyQingWuPaneBackground() {
         wantsLayer = true
         let color = Theme.paneBackgroundColor.resolvedColor(for: effectiveAppearance)
         layer?.backgroundColor = color.cgColor
     }
 
-    func fillMiaoYanPaneBackground(_ dirtyRect: NSRect) {
+    func fillQingWuPaneBackground(_ dirtyRect: NSRect) {
         Theme.paneBackgroundColor.resolvedColor(for: effectiveAppearance).setFill()
         dirtyRect.fill()
     }
 }
 
 @MainActor
-enum MiaoYanAlert {
+enum QingWuAlert {
     static func make(
         message: String,
         informativeText: String? = nil,

@@ -59,10 +59,10 @@
 			<key>CFBundleURLIconFile</key>
 			<string>icon</string>
 			<key>CFBundleURLName</key>
-			<string>com.tw93.miaoyan</string>
+			<string>com.qingwu.app</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>miaoyan</string>
+				<string>qingwu</string>
 			</array>
 		</dict>
 		<dict>
@@ -71,7 +71,7 @@
 			<key>CFBundleURLIconFile</key>
 			<string>icon</string>
 			<key>CFBundleURLName</key>
-			<string>com.tw93.miaoyan</string>
+			<string>com.qingwu.app</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>nv</string>
@@ -109,12 +109,12 @@
 	<string>NSApplication</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
-		<key>iCloud.com.tw93.miaoyan</key>
+		<key>iCloud.com.qingwu.app</key>
 		<dict>
 			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 			<true/>
 			<key>NSUbiquitousContainerName</key>
-			<string>MiaoYan</string>
+			<string>QingWu</string>
 			<key>NSUbiquitousContainerSupportedFolderLevels</key>
 			<string>One</string>
 		</dict>
@@ -124,9 +124,9 @@
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://miaoyan.app/appcast.xml</string>
+	<string>https://qingwu.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>seQrPHFOWomxlN8ufdI3/ba1/HL1t86TkzRb53FSGys=</string>
+	<string>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</string>
 	<key>SUScheduledCheckInterval</key>
 	<real>3666</real>
 	<key>UILaunchStoryboardName</key>

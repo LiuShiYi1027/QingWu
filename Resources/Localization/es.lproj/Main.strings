@@ -5,8 +5,8 @@
 /* Class = "NSTextFieldCell"; title = "Code FontName"; ObjectID = "0UJ-Ss-20u"; */
 "0UJ-Ss-20u.title" = "Fuente de Código";
 
-/* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "1Xt-HY-uBw"; */
-"1Xt-HY-uBw.title" = "MiaoYan";
+/* Class = "NSMenuItem"; title = "QingWu"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "QingWu";
 
 /* Class = "NSMenuItem"; title = "Bold"; ObjectID = "1Yd-6R-e7Y"; */
 "1Yd-6R-e7Y.title" = "Negrita";
@@ -83,8 +83,8 @@
 /* Class = "NSMenuItem"; title = "Enter Full Screen"; ObjectID = "4J7-dP-txa"; */
 "4J7-dP-txa.title" = "Entrar en Pantalla Completa";
 
-/* Class = "NSMenuItem"; title = "Quit MiaoYan"; ObjectID = "4sb-4s-VLi"; */
-"4sb-4s-VLi.title" = "Salir de MiaoYan";
+/* Class = "NSMenuItem"; title = "Quit QingWu"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Salir de QingWu";
 
 /* Class = "NSMenuItem"; title = "Edit"; ObjectID = "5QF-Oa-p0T"; */
 "5QF-Oa-p0T.title" = "Editar";
@@ -182,8 +182,8 @@
 /* Class = "NSMenuItem"; title = "16"; ObjectID = "DTe-57-Kqf"; */
 "DTe-57-Kqf.title" = "16";
 
-/* Class = "NSMenuItem"; title = "MiaoYan PPT PDF"; ObjectID = "DhD-mk-T1u"; */
-"DhD-mk-T1u.title" = "MiaoYan PPT PDF";
+/* Class = "NSMenuItem"; title = "QingWu PPT PDF"; ObjectID = "DhD-mk-T1u"; */
+"DhD-mk-T1u.title" = "QingWu PPT PDF";
 
 /* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
 "Tgl-Spl-View.title" = "Alternar Vista Dividida";
@@ -281,8 +281,8 @@
 /* Class = "NSMenuItem"; title = "15"; ObjectID = "IF0-dQ-WWn"; */
 "IF0-dQ-WWn.title" = "15";
 
-/* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
-"IQv-IB-iLA.title" = "MiaoYan";
+/* Class = "NSWindow"; title = "QingWu"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "QingWu";
 
 /* Class = "NSMenuItem"; title = "Times New Roman"; ObjectID = "IUe-Hi-7b6"; */
 "IUe-Hi-7b6.title" = "Times New Roman";
@@ -440,8 +440,8 @@
 /* Class = "NSMenuItem"; title = "Find and Replace…"; ObjectID = "YEy-JH-Tfz"; */
 "YEy-JH-Tfz.title" = "Buscar y Reemplazar…";
 
-/* Class = "NSViewController"; title = "About MiaoYan"; ObjectID = "YNW-vn-A3h"; */
-"YNW-vn-A3h.title" = "Acerca de MiaoYan";
+/* Class = "NSViewController"; title = "About QingWu"; ObjectID = "YNW-vn-A3h"; */
+"YNW-vn-A3h.title" = "Acerca de QingWu";
 
 /* Class = "NSButton"; ibShadowedToolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
 "Yei-Or-qiI.ibShadowedToolTip" = "Nuevo Proyecto";
@@ -455,14 +455,14 @@
 /* Class = "NSTextFieldCell"; title = "Button Display"; ObjectID = "ZkY-LA-CH2"; */
 "ZkY-LA-CH2.title" = "Visualización de Botones";
 
-/* Class = "NSTextFieldCell"; title = "Copyright © 2024 Tw93"; ObjectID = "ad2-SL-Pni"; */
-"ad2-SL-Pni.title" = "Copyright © 2024 Tw93";
+/* Class = "NSTextFieldCell"; title = "Copyright © 2026 QingWu Team · Based on MiaoYan by Tw93"; ObjectID = "ad2-SL-Pni"; */
+"ad2-SL-Pni.title" = "Copyright © 2026 QingWu Team · Basado en MiaoYan por Tw93";
 
 /* Class = "NSMenuItem"; title = "Consolas"; ObjectID = "b5S-Qt-NKY"; */
 "b5S-Qt-NKY.title" = "Consolas";
 
-/* Class = "NSMenuItem"; title = "Hide MiaoYan"; ObjectID = "bxj-82-bcY"; */
-"bxj-82-bcY.title" = "Ocultar MiaoYan";
+/* Class = "NSMenuItem"; title = "Hide QingWu"; ObjectID = "bxj-82-bcY"; */
+"bxj-82-bcY.title" = "Ocultar QingWu";
 
 /* Class = "NSMenuItem"; title = "16"; ObjectID = "c1S-aB-edm"; */
 "c1S-aB-edm.title" = "16";
@@ -524,8 +524,8 @@
 /* Class = "NSMenuItem"; title = "Paste"; ObjectID = "gVA-U4-sdL"; */
 "gVA-U4-sdL.title" = "Pegar";
 
-/* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
-"gXN-Ca-moU.title" = "Acerca de MiaoYan";
+/* Class = "NSMenuItem"; title = "About QingWu"; ObjectID = "gXN-Ca-moU"; */
+"gXN-Ca-moU.title" = "Acerca de QingWu";
 
 /* Class = "NSMenuItem"; title = "Editing"; ObjectID = "gh6-SU-E0i"; */
 "gh6-SU-E0i.title" = "Edición";
@@ -584,8 +584,8 @@
 /* Class = "NSMenuItem"; title = "20"; ObjectID = "miK-8H-a4Z"; */
 "miK-8H-a4Z.title" = "20";
 
-/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "mj8-mU-0W4"; */
-"mj8-mU-0W4.title" = "MiaoYan";
+/* Class = "NSTextFieldCell"; title = "QingWu"; ObjectID = "mj8-mU-0W4"; */
+"mj8-mU-0W4.title" = "QingWu";
 
 /* Class = "NSMenuItem"; title = "Times New Roman"; ObjectID = "n5K-Sw-Jli"; */
 "n5K-Sw-Jli.title" = "Times New Roman";
@@ -629,14 +629,14 @@
 /* Class = "NSMenu"; title = "File"; ObjectID = "uMZ-sI-7ja"; */
 "uMZ-sI-7ja.title" = "Archivo";
 
-/* Class = "NSMenu"; title = "MiaoYan"; ObjectID = "uQy-DD-JDr"; */
-"uQy-DD-JDr.title" = "MiaoYan";
+/* Class = "NSMenu"; title = "QingWu"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "QingWu";
 
 /* Class = "NSMenuItem"; title = "Cut"; ObjectID = "uRl-iY-unG"; */
 "uRl-iY-unG.title" = "Cortar";
 
-/* Class = "NSMenuItem"; title = "MiaoYan PPT"; ObjectID = "uUS-sg-zGt"; */
-"uUS-sg-zGt.title" = "MiaoYan PPT";
+/* Class = "NSMenuItem"; title = "QingWu PPT"; ObjectID = "uUS-sg-zGt"; */
+"uUS-sg-zGt.title" = "QingWu PPT";
 
 /* Class = "NSMenuItem"; title = "Times New Roman"; ObjectID = "uW5-RQ-wqF"; */
 "uW5-RQ-wqF.title" = "Times New Roman";
@@ -644,8 +644,8 @@
 /* Class = "NSMenuItem"; title = "Follow Twitter"; ObjectID = "uXW-Mt-L5y"; */
 "uXW-Mt-L5y.title" = "Seguir en Twitter";
 
-/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "v9A-ZO-AAb"; */
-"v9A-ZO-AAb.title" = "MiaoYan";
+/* Class = "NSTextFieldCell"; title = "QingWu"; ObjectID = "v9A-ZO-AAb"; */
+"v9A-ZO-AAb.title" = "QingWu";
 
 /* Class = "NSMenuItem"; title = "12"; ObjectID = "vYJ-nZ-Rkv"; */
 "vYJ-nZ-Rkv.title" = "12";
@@ -656,8 +656,8 @@
 /* Class = "NSMenuItem"; title = "Telegram"; ObjectID = "vvp-aA-TcP"; */
 "vvp-aA-TcP.title" = "Telegram";
 
-/* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "w6O-2c-LfY"; */
-"w6O-2c-LfY.title" = "MiaoYan";
+/* Class = "NSMenuItem"; title = "QingWu"; ObjectID = "w6O-2c-LfY"; */
+"w6O-2c-LfY.title" = "QingWu";
 
 /* Class = "NSMenuItem"; title = "Copy"; ObjectID = "x3v-GG-iWU"; */
 "x3v-GG-iWU.title" = "Copiar";

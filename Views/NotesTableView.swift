@@ -400,7 +400,7 @@ class NotesTableView: NSTableView {
                     currentNote.save(content: currentNote.content)
                 } else {
                     let mismatch = NSError(
-                        domain: "com.tw93.miaoyan.race",
+                        domain: "com.qingwu.app.race",
                         code: 2,
                         userInfo: [NSLocalizedDescriptionKey: "textStorage owner drift in tableViewSelectionDidChange"])
                     AppDelegate.trackError(mismatch, context: "NotesTableView.tableViewSelectionDidChange.ownerGuard")

@@ -9,7 +9,8 @@ extension Notification.Name {
 }
 // MARK: - App Identifier
 enum AppIdentifier {
-    static let bundleID: String = Bundle.main.bundleIdentifier ?? "com.tw93.miaoyan"
+    static let bundleID: String = Bundle.main.bundleIdentifier ?? "com.qingwu.app"
+    // Legacy suite of upstream MiaoYan, kept so preferences and xattrs migrate over.
     static let legacyBundleID: String = "com.tw93.miaoyan"
 
     // xattr keys (follow bundleID, with legacy fallback for reading)
@@ -50,9 +51,9 @@ enum StorageLocationValidator {
             throw StorageLocationValidationError.cannotRead
         }
 
-        let checkURL = url.appendingPathComponent(".miaoyan-folder-check-\(UUID().uuidString)", isDirectory: false)
+        let checkURL = url.appendingPathComponent(".qingwu-folder-check-\(UUID().uuidString)", isDirectory: false)
         do {
-            try Data("MiaoYan folder check\n".utf8).write(to: checkURL, options: .atomic)
+            try Data("QingWu folder check\n".utf8).write(to: checkURL, options: .atomic)
             try fm.removeItem(at: checkURL)
         } catch {
             try? fm.removeItem(at: checkURL)
@@ -72,9 +73,9 @@ enum StorageLocationValidationError: Error {
         case .notDirectory:
             return I18n.str("Selected storage folder is not a folder.")
         case .cannotRead:
-            return I18n.str("MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder.")
+            return I18n.str("QingWu cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder.")
         case .cannotWrite:
-            return I18n.str("MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app.")
+            return I18n.str("QingWu cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app.")
         }
     }
 }
@@ -232,7 +233,7 @@ public enum UserDefaultsManagement {
             if let dl = UserDefaults.standard.object(forKey: Constants.EditorLineBreak) as? String {
                 return dl
             }
-            return "MiaoYan"
+            return "QingWu"
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.EditorLineBreak)
@@ -690,11 +691,11 @@ public enum UserDefaultsManagement {
         _localDocumentsChecked = true
 
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-            let miaoyanPath: String = path + "/MiaoYan"
+            let qingwuPath: String = path + "/QingWu"
             try? FileManager.default.createDirectory(
-                atPath: miaoyanPath,
+                atPath: qingwuPath,
                 withIntermediateDirectories: true, attributes: nil)
-            _cachedLocalDocumentsURL = URL(fileURLWithPath: miaoyanPath)
+            _cachedLocalDocumentsURL = URL(fileURLWithPath: qingwuPath)
             return _cachedLocalDocumentsURL
         }
         return nil
@@ -953,7 +954,7 @@ public enum UserDefaultsManagement {
 
     static var projects: [URL] {
         get {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+            guard let defaults = UserDefaults(suiteName: "group.qingwu-manager") else {
                 return []
             }
             if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL] {
@@ -962,7 +963,7 @@ public enum UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+            guard let defaults = UserDefaults(suiteName: "group.qingwu-manager") else {
                 return
             }
             let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
@@ -971,7 +972,7 @@ public enum UserDefaultsManagement {
     }
     static var importURLs: [URL] {
         get {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+            guard let defaults = UserDefaults(suiteName: "group.qingwu-manager") else {
                 return []
             }
             if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data,
@@ -982,7 +983,7 @@ public enum UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+            guard let defaults = UserDefaults(suiteName: "group.qingwu-manager") else {
                 return
             }
             if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {

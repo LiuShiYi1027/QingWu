@@ -60,9 +60,9 @@ class Sidebar {
         let language = UserDefaultsManagement.defaultLanguage
         switch language {
         case 1:  // English
-            return "MiaoYan"
+            return "QingWu"
         default:  // Chinese, Japanese, etc.
-            return "妙言"
+            return "青梧"
         }
     }
 

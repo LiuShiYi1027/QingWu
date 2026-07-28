@@ -931,7 +931,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         let paragraph = storage.mutableString.substring(with: paragraphRange)
-        let candidates = ["://", "www.", "miaoyan://", "/i/", "/files/", "[[", "]("]
+        let candidates = ["://", "www.", "qingwu://", "/i/", "/files/", "[[", "]("]
         return candidates.contains(where: { paragraph.contains($0) })
     }
 
@@ -994,7 +994,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         // target note's entire content with another file's text (#543).
         guard let owner = storageNote, owner.isEqualURL(url: note.url) else {
             let mismatch = NSError(
-                domain: "com.tw93.miaoyan.race",
+                domain: "com.qingwu.app.race",
                 code: 3,
                 userInfo: [
                     NSLocalizedDescriptionKey:

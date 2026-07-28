@@ -7,11 +7,11 @@ final class NoteVersionManager: @unchecked Sendable {
     private let maxVersions = 20
     private let minInterval: TimeInterval = 300
     private var lastSaved: [String: Date] = [:]
-    private let queue = DispatchQueue(label: "com.tw93.miaoyan.versions")
+    private let queue = DispatchQueue(label: "com.qingwu.app.versions")
 
     private init() {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        versionsRoot = base.appendingPathComponent("com.tw93.miaoyan/Versions")
+        versionsRoot = base.appendingPathComponent("com.qingwu.app/Versions")
         try? FileManager.default.createDirectory(at: versionsRoot, withIntermediateDirectories: true)
     }
 

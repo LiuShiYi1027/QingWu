@@ -10,8 +10,8 @@
 /* Class = "NSMenuItem"; title = "Title"; ObjectID = "1qV-pJ-ZQT"; */
 "1qV-pJ-ZQT.title" = "標題";
 
-/* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "1Xt-HY-uBw"; */
-"1Xt-HY-uBw.title" = "妙言";
+/* Class = "NSMenuItem"; title = "QingWu"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "青梧";
 
 /* Class = "NSMenuItem"; title = "Bold"; ObjectID = "1Yd-6R-e7Y"; */
 "1Yd-6R-e7Y.title" = "粗體";
@@ -76,8 +76,8 @@
 /* Class = "NSMenuItem"; title = "Enter Full Screen"; ObjectID = "4J7-dP-txa"; */
 "4J7-dP-txa.title" = "進入全螢幕模式";
 
-/* Class = "NSMenuItem"; title = "Quit MiaoYan"; ObjectID = "4sb-4s-VLi"; */
-"4sb-4s-VLi.title" = "結束妙言";
+/* Class = "NSMenuItem"; title = "Quit QingWu"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "結束青梧";
 
 /* Class = "NSMenu"; title = "Sort by"; ObjectID = "05n-RU-nOV"; */
 "05n-RU-nOV.title" = "排序方式";
@@ -130,8 +130,8 @@
 /* Class = "NSMenuItem"; title = "Minimize"; ObjectID = "A5V-Wm-if2"; */
 "A5V-Wm-if2.title" = "最小化";
 
-/* Class = "NSTextFieldCell"; title = "Copyright © 2024 Tw93"; ObjectID = "ad2-SL-Pni"; */
-"ad2-SL-Pni.title" = "著作權所有 © 2024 Tw93";
+/* Class = "NSTextFieldCell"; title = "Copyright © 2026 QingWu Team · Based on MiaoYan by Tw93"; ObjectID = "ad2-SL-Pni"; */
+"ad2-SL-Pni.title" = "版權所有 © 2026 QingWu Team · 基於 Tw93 的 MiaoYan";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
 "Adc-zl-sqX.ibShadowedToolTip" = "格式";
@@ -163,8 +163,8 @@
 /* Class = "NSMenuItem"; title = "SF Pro Text"; ObjectID = "Bwp-Pv-g0O"; */
 "Bwp-Pv-g0O.title" = "SF Pro Text";
 
-/* Class = "NSMenuItem"; title = "Hide MiaoYan"; ObjectID = "bxj-82-bcY"; */
-"bxj-82-bcY.title" = "隱藏妙言";
+/* Class = "NSMenuItem"; title = "Hide QingWu"; ObjectID = "bxj-82-bcY"; */
+"bxj-82-bcY.title" = "隱藏青梧";
 
 /* Class = "NSMenu"; title = "Folder"; ObjectID = "BYI-2F-BJo"; */
 "BYI-2F-BJo.title" = "檔案夾";
@@ -199,8 +199,8 @@
 /* Class = "NSMenuItem"; title = "Hide/Show Sidebar"; ObjectID = "DCh-5P-PZe"; */
 "DCh-5P-PZe.title" = "顯示/隱藏 側邊欄";
 
-/* Class = "NSMenuItem"; title = "MiaoYan PPT PDF"; ObjectID = "DhD-mk-T1u"; */
-"DhD-mk-T1u.title" = "妙言 PPT PDF";
+/* Class = "NSMenuItem"; title = "QingWu PPT PDF"; ObjectID = "DhD-mk-T1u"; */
+"DhD-mk-T1u.title" = "青梧 PPT PDF";
 
 /* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
 "Tgl-Spl-View.title" = "切換分欄";
@@ -343,8 +343,8 @@
 /* Class = "NSTableColumn"; headerCell.title = "Library"; ObjectID = "Gwp-vX-YaR"; */
 "Gwp-vX-YaR.headerCell.title" = "資源庫";
 
-/* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
-"gXN-Ca-moU.title" = "關於妙言";
+/* Class = "NSMenuItem"; title = "About QingWu"; ObjectID = "gXN-Ca-moU"; */
+"gXN-Ca-moU.title" = "關於青梧";
 
 /* Class = "NSMenuItem"; title = "Always"; ObjectID = "h0Q-Zx-pSP"; */
 "h0Q-Zx-pSP.title" = "Always";
@@ -388,8 +388,8 @@
 /* Class = "NSMenuItem"; title = "Release Notes"; ObjectID = "iNW-7A-WXP"; */
 "iNW-7A-WXP.title" = "發行記錄";
 
-/* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
-"IQv-IB-iLA.title" = "妙言";
+/* Class = "NSWindow"; title = "QingWu"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "青梧";
 
 /* Class = "NSMenu"; title = "Format"; ObjectID = "iRO-fj-L79"; */
 "iRO-fj-L79.title" = "格式";
@@ -443,8 +443,8 @@
 /* Class = "NSMenuItem"; title = "20"; ObjectID = "miK-8H-a4Z"; */
 "miK-8H-a4Z.title" = "20";
 
-/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "mj8-mU-0W4"; */
-"mj8-mU-0W4.title" = "妙言";
+/* Class = "NSTextFieldCell"; title = "QingWu"; ObjectID = "mj8-mU-0W4"; */
+"mj8-mU-0W4.title" = "青梧";
 
 /* Class = "NSMenu"; title = "Window"; ObjectID = "MlK-p2-CxF"; */
 "MlK-p2-CxF.title" = "視窗";
@@ -586,14 +586,14 @@
 /* Class = "NSMenu"; title = "File"; ObjectID = "uMZ-sI-7ja"; */
 "uMZ-sI-7ja.title" = "檔案";
 
-/* Class = "NSMenu"; title = "MiaoYan"; ObjectID = "uQy-DD-JDr"; */
-"uQy-DD-JDr.title" = "妙言";
+/* Class = "NSMenu"; title = "QingWu"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "青梧";
 
 /* Class = "NSMenuItem"; title = "Cut"; ObjectID = "uRl-iY-unG"; */
 "uRl-iY-unG.title" = "剪下";
 
-/* Class = "NSMenuItem"; title = "MiaoYan PPT"; ObjectID = "uUS-sg-zGt"; */
-"uUS-sg-zGt.title" = "妙言 PPT";
+/* Class = "NSMenuItem"; title = "QingWu PPT"; ObjectID = "uUS-sg-zGt"; */
+"uUS-sg-zGt.title" = "青梧 PPT";
 
 /* Class = "NSMenuItem"; title = "Times New Roman"; ObjectID = "uW5-RQ-wqF"; */
 "uW5-RQ-wqF.title" = "Times New Roman";
@@ -601,8 +601,8 @@
 /* Class = "NSMenuItem"; title = "Follow Twitter"; ObjectID = "uXW-Mt-L5y"; */
 "uXW-Mt-L5y.title" = "追蹤 Twitter";
 
-/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "v9A-ZO-AAb"; */
-"v9A-ZO-AAb.title" = "妙言";
+/* Class = "NSTextFieldCell"; title = "QingWu"; ObjectID = "v9A-ZO-AAb"; */
+"v9A-ZO-AAb.title" = "青梧";
 
 /* Class = "NSMenuItem"; title = "23"; ObjectID = "vbn-FE-ciC"; */
 "vbn-FE-ciC.title" = "23";
@@ -616,8 +616,8 @@
 /* Class = "NSMenuItem"; title = "12"; ObjectID = "vYJ-nZ-Rkv"; */
 "vYJ-nZ-Rkv.title" = "12";
 
-/* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "w6O-2c-LfY"; */
-"w6O-2c-LfY.title" = "MiaoYan";
+/* Class = "NSMenuItem"; title = "QingWu"; ObjectID = "w6O-2c-LfY"; */
+"w6O-2c-LfY.title" = "QingWu";
 
 /* Class = "NSMenu"; title = "Edit"; ObjectID = "W48-6f-4Dl"; */
 "W48-6f-4Dl.title" = "編輯";
@@ -667,8 +667,8 @@
 /* Class = "NSTextFieldCell"; title = "Code Background"; ObjectID = "yMw-SJ-DAY"; */
 "yMw-SJ-DAY.title" = "程式碼背景色";
 
-/* Class = "NSViewController"; title = "About MiaoYan"; ObjectID = "YNW-vn-A3h"; */
-"YNW-vn-A3h.title" = "關於妙言";
+/* Class = "NSViewController"; title = "About QingWu"; ObjectID = "YNW-vn-A3h"; */
+"YNW-vn-A3h.title" = "關於青梧";
 
 /* Class = "NSMenuItem"; title = "Descending"; ObjectID = "ytU-K8-Ilj"; */
 "ytU-K8-Ilj.title" = "降冪排序";

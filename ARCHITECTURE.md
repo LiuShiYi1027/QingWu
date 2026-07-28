@@ -1,4 +1,4 @@
-# MiaoYan Architecture
+# QingWu Architecture
 
 > This document describes the architecture as it actually exists, not as it
 > ought to be. Aspirational refactors are tracked in
@@ -15,8 +15,8 @@
 ├── Helpers/         # Utilities and services (highlighting, formatting, theming, diagnostics)
 ├── Extensions/      # Swift extensions on Foundation / AppKit types
 ├── Resources/       # Bundled assets, including DownView.bundle (HTML/CSS/JS for preview)
-├── MiaoYanMobile/   # iOS SwiftUI target (App/Services/Views/Resources)
-├── MiaoYanTests/    # Unit tests for pure-logic surfaces
+├── QingWuMobile/   # iOS SwiftUI target (App/Services/Views/Resources)
+├── QingWuTests/    # Unit tests for pure-logic surfaces
 └── scripts/         # Local build, App Store, release helpers, target wiring (Ruby + bash)
 ```
 
@@ -32,9 +32,9 @@ A single macOS application process owns:
 - One `WKWebView` instance per editor pane that loads
   `Resources/DownView.bundle/index.html` for live preview.
 
-The iOS target (`MiaoYanMobile/`) is a separate executable; it shares the
+The iOS target (`QingWuMobile/`) is a separate executable; it shares the
 `Business/` models via the same compile pool but has its own SwiftUI app entry
-point (`MiaoYanMobileApp.swift`).
+point (`QingWuMobileApp.swift`).
 
 ## Singleton & Facade Inventory
 
@@ -136,17 +136,17 @@ Bundled JS used by the preview is vendored under
   OS-level trash via `FileManager.default.trashItem(...)`.
 - Symlinked directories: supported but indexed in a way that avoids recursion
   loops (`Business/Storage.swift::checkSub`).
-- Version history: `Library/Application Support/MiaoYan/Versions/<note-id>/`
+- Version history: `Library/Application Support/QingWu/Versions/<note-id>/`
   managed by `NoteVersionManager`.
-- Diagnostics log: `~/Library/Logs/MiaoYan/diagnostics.log` (ring buffer,
+- Diagnostics log: `~/Library/Logs/QingWu/diagnostics.log` (ring buffer,
   50 lines, JSON per line). See `Helpers/Diagnostics.swift`.
 
 ## iOS Target Boundary
 
-`MiaoYanMobile/` compiles into the same `MiaoYan.xcodeproj` and shares the
-`Business/` source pool. SwiftUI lives only inside `MiaoYanMobile/`; AppKit
+`QingWuMobile/` compiles into the same `QingWu.xcodeproj` and shares the
+`Business/` source pool. SwiftUI lives only inside `QingWuMobile/`; AppKit
 lives only outside. There is no shared UI layer. The iOS target reads notes
-through `MiaoYanMobile/Services/FileReader.swift`, which is a parallel
+through `QingWuMobile/Services/FileReader.swift`, which is a parallel
 implementation to (not a thin wrapper over) the macOS storage flow.
 
 ## Release & Update Path
@@ -166,7 +166,7 @@ implementation to (not a thin wrapper over) the macOS storage flow.
 - `Business/AppEnvironment.swift` is in the app target and is the preferred
   facade for new singleton access.
 - `Helpers/UIDelay.swift` is in the app target for semantic async delay names.
-- `MiaoYanTests/` is wired into `MiaoYan.xcodeproj`, and CI runs the macOS unit
+- `QingWuTests/` is wired into `QingWu.xcodeproj`, and CI runs the macOS unit
   test step together with the Debug app build.
 
 ## See Also

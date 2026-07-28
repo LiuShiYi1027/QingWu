@@ -178,8 +178,8 @@ class BasePrefsViewController: NSViewController {
             return
         }
 
-        MiaoYanAlert.confirm(
-            message: I18n.str("Restart to MiaoYan to take effect"),
+        QingWuAlert.confirm(
+            message: I18n.str("Restart to QingWu to take effect"),
             confirmTitle: I18n.str("Confirm"),
             style: .informational,
             for: window

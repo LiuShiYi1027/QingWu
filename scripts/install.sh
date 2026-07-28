@@ -1,23 +1,23 @@
 #!/bin/bash
 #
-# MiaoYan CLI Installer
-# https://github.com/tw93/MiaoYan
+# QingWu CLI Installer
+# https://github.com/liushiyi1027/QingWu
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/liushiyi1027/QingWu/main/scripts/install.sh | bash
 #
 
 set -e
 
-REPO="tw93/MiaoYan"
-INSTALL_DIR="${MIAOYAN_INSTALL_DIR:-$HOME/.local/bin}"
-SCRIPT_NAME="miao"
-ALIAS_NAME="miaoyan"
+REPO="liushiyi1027/QingWu"
+INSTALL_DIR="${QINGWU_INSTALL_DIR:-$HOME/.local/bin}"
+SCRIPT_NAME="qingwu"
+ALIAS_NAME="qw"
 
-# Source ref for the `miao` script. Defaults to the latest GitHub release tag
-# so a bad push to main cannot break new installs. Set MIAOYAN_INSTALL_REF to
-# override (e.g. `MIAOYAN_INSTALL_REF=main` for local development).
-INSTALL_REF="${MIAOYAN_INSTALL_REF:-}"
+# Source ref for the `qingwu` script. Defaults to the latest GitHub release tag
+# so a bad push to main cannot break new installs. Set QINGWU_INSTALL_REF to
+# override (e.g. `QINGWU_INSTALL_REF=main` for local development).
+INSTALL_REF="${QINGWU_INSTALL_REF:-}"
 if [[ -z "$INSTALL_REF" ]]; then
     INSTALL_REF=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
         | grep -m1 '"tag_name"' \
@@ -39,14 +39,14 @@ warn() { echo -e "${YELLOW}▸${NC} $1"; }
 error() { echo -e "${RED}▸${NC} $1" >&2; exit 1; }
 
 # Check macOS
-[[ "$(uname)" != "Darwin" ]] && error "MiaoYan CLI is macOS only."
+[[ "$(uname)" != "Darwin" ]] && error "QingWu CLI is macOS only."
 
 # Create install directory
 mkdir -p "$INSTALL_DIR"
 
 # Download script
-info "Downloading miao CLI (ref: $INSTALL_REF)..."
-curl -fsSL "https://raw.githubusercontent.com/$REPO/$INSTALL_REF/scripts/miaoyan" -o "$INSTALL_DIR/$SCRIPT_NAME"
+info "Downloading qingwu CLI (ref: $INSTALL_REF)..."
+curl -fsSL "https://raw.githubusercontent.com/$REPO/$INSTALL_REF/scripts/qingwu" -o "$INSTALL_DIR/$SCRIPT_NAME"
 chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
 
 # Create alias symlink
@@ -55,7 +55,7 @@ ln -sf "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/$ALIAS_NAME"
 # Check PATH
 if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
     warn "$INSTALL_DIR is not in PATH"
-    
+
     # Detect shell config
     SHELL_CONFIG=""
     if [[ -f "$HOME/.zshrc" ]]; then
@@ -65,7 +65,7 @@ if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
     elif [[ -f "$HOME/.bash_profile" ]]; then
         SHELL_CONFIG="$HOME/.bash_profile"
     fi
-    
+
     if [[ -n "$SHELL_CONFIG" ]]; then
         echo "export PATH=\"$INSTALL_DIR:\$PATH\"" >> "$SHELL_CONFIG"
         info "Added $INSTALL_DIR to PATH in $SHELL_CONFIG"
@@ -77,14 +77,14 @@ if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
 fi
 
 echo ""
-info "Miao CLI installed successfully! 🎉"
+info "QingWu CLI installed successfully! 🎉"
 echo ""
 echo "  Usage:"
-echo "    miao open <title|path>    # Open note"
-echo "    miao new <title> [text]   # Create new note"
-echo "    miao search <query>       # Search notes in terminal"
-echo "    miao list [folder]        # List top-level folders, or markdown in folder"
-echo "    miao cat <title|path>     # Print note content"
+echo "    qingwu open <title|path>    # Open note"
+echo "    qingwu new <title> [text]   # Create new note"
+echo "    qingwu search <query>       # Search notes in terminal"
+echo "    qingwu list [folder]        # List top-level folders, or markdown in folder"
+echo "    qingwu cat <title|path>     # Print note content"
 echo ""
-echo "  Run 'miao help' for more commands."
+echo "  Run 'qingwu help' for more commands."
 echo ""

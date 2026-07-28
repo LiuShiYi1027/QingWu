@@ -644,7 +644,7 @@ extension ViewController {
         // Handle both presentation and PPT modes
         if sessionPresentationMode || sessionMagicPPTMode {
             if sessionMagicPPTMode {
-                disableMiaoYanPPT()
+                disableQingWuPPT()
             } else {
                 disablePresentation()
             }
@@ -654,7 +654,7 @@ extension ViewController {
     }
     // MARK: - PPT Mode
 
-    func isMiaoYanPPT(needToast: Bool = true) -> Bool {
+    func isQingWuPPT(needToast: Bool = true) -> Bool {
         guard let note = notesTableView.getSelectedNote() else {
             return false
         }
@@ -663,7 +663,7 @@ extension ViewController {
             return true
         }
         if needToast {
-            toast(message: I18n.str("No delimiter --- identification, Cannot use MiaoYan PPT~"), style: .failure)
+            toast(message: I18n.str("No delimiter --- identification, Cannot use QingWu PPT~"), style: .failure)
         }
         return false
     }
@@ -671,16 +671,16 @@ extension ViewController {
     func toggleMagicPPT() {
         saveTitleSafely()
         if sessionMagicPPTMode {
-            disableMiaoYanPPT()
+            disableQingWuPPT()
         } else {
-            if !isMiaoYanPPT() {
+            if !isQingWuPPT() {
                 return
             }
-            enableMiaoYanPPT()
+            enableQingWuPPT()
         }
     }
 
-    func enableMiaoYanPPT() {
+    func enableQingWuPPT() {
         // Ensure a note is selected before entering PPT mode
         ensureNoteSelection(preferLastSelected: true)
 
@@ -760,7 +760,7 @@ extension ViewController {
         }
     }
 
-    func disableMiaoYanPPT() {
+    func disableQingWuPPT() {
         // Clear magicPPT flag FIRST to allow disablePreview to work properly
         sessionMagicPPTMode = false
 
@@ -1306,12 +1306,12 @@ extension ViewController {
     @IBAction func toggleMagicPPT(_ sender: Any) {
         saveTitleSafely()
         if sessionMagicPPTMode {
-            disableMiaoYanPPT()
+            disableQingWuPPT()
         } else {
-            if !isMiaoYanPPT() {
+            if !isQingWuPPT() {
                 return
             }
-            enableMiaoYanPPT()
+            enableQingWuPPT()
         }
     }
 
@@ -1430,7 +1430,7 @@ extension ViewController {
     }
 
     public func updateTitle(newTitle: String) {
-        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "QingWu"
         var title = newTitle
 
         if newTitle.isValidUUID {
@@ -1593,7 +1593,7 @@ extension ViewController {
     }
 
     private func showAlert(for title: String) {
-        MiaoYanAlert.show(
+        QingWuAlert.show(
             message: I18n.str("Please change the title"),
             informativeText: String(format: I18n.str("This %@ under this folder already exists!"), title),
             for: view.window

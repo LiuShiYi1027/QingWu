@@ -126,7 +126,7 @@ class HtmlManager {
                     border-bottom: 1px solid var(--pdf-hairline) !important;
                 }
                 pre, table, figure, blockquote,
-                .miaoyan-mermaid, .md-diagram-panel {
+                .qingwu-mermaid, .md-diagram-panel {
                     page-break-inside: avoid;
                 }
                 p {
@@ -236,7 +236,7 @@ class HtmlManager {
             ?? URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
         return
             baseURL
-            .appendingPathComponent(Bundle.main.bundleIdentifier ?? "MiaoYan", isDirectory: true)
+            .appendingPathComponent(Bundle.main.bundleIdentifier ?? "QingWu", isDirectory: true)
             .appendingPathComponent("wkPreview", isDirectory: true)
     }()
     private static let previewHealthCheckPaths = [
@@ -249,7 +249,7 @@ class HtmlManager {
     ]
 
     // Constants
-    private static let cdnBaseURL = "https://cdn.miaoyan.app/Resources"
+    private static let cdnBaseURL = "https://raw.githubusercontent.com/liushiyi1027/QingWu/main/Resources"
     private static let imgTagMinLength = 26
     private static let imageNotFoundPlaceholder =
         "<img src=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='80'%3E%3Crect width='120' height='80' fill='%23f5f5f5' stroke='%23ddd' stroke-width='1'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='12' font-family='sans-serif'%3EImage Not Found%3C/text%3E%3C/svg%3E\" alt=\"Image not found\" style=\"max-width: 120px; opacity: 0.6;\" />"

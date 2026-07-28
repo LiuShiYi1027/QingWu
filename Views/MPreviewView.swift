@@ -49,7 +49,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// ones.
     private var postReadyCallbacks: [() -> Void] = []
     /// Whether this preview is currently rendered as the right pane of
-    /// MiaoYan's split editor. Tracked locally so we can re-apply the
+    /// QingWu's split editor. Tracked locally so we can re-apply the
     /// `body.miaoyan-split-mode` class on every webView(_:didFinish:),
     /// because each `load(note:)` rebuilds the bundled HTML and the body
     /// element starts out without our class. Driven by setSplitChrome.
@@ -413,7 +413,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             if let vc = AppContext.shared.viewController {
                 if vc.sessionMagicPPTMode {
                     DispatchQueue.main.async {
-                        vc.disableMiaoYanPPT()
+                        vc.disableQingWuPPT()
                     }
                     return true
                 } else if vc.sessionPresentationMode {

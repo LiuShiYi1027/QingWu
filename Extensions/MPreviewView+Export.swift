@@ -270,7 +270,7 @@ extension MPreviewView {
         let printCSS = """
                 (function() {
                     var style = document.createElement('style');
-                    style.id = 'miaoyan-export-style';
+                    style.id = 'qingwu-export-style';
                     style.innerHTML = `\(trimmedMediaCSS)
                            \(exportLayoutCSS)
                         }
@@ -289,7 +289,7 @@ extension MPreviewView {
     }
 
     private func removePrintStyles() {
-        let removeScript = "var s = document.getElementById('miaoyan-export-style'); if(s) s.remove();"
+        let removeScript = "var s = document.getElementById('qingwu-export-style'); if(s) s.remove();"
         evaluateJavaScript(removeScript, completionHandler: nil)
     }
 
@@ -609,7 +609,7 @@ extension MPreviewView {
                 vc.toastDismiss()
                 vc.toastExport(status: false)
                 if vc.shouldDisablePPTAfterExport {
-                    vc.disableMiaoYanPPT()
+                    vc.disableQingWuPPT()
                     vc.shouldDisablePPTAfterExport = false
                 }
                 return
@@ -637,7 +637,7 @@ extension MPreviewView {
                 vc.toastDismiss()
 
                 if vc.shouldDisablePPTAfterExport {
-                    vc.disableMiaoYanPPT()
+                    vc.disableQingWuPPT()
                     vc.shouldDisablePPTAfterExport = false
                 }
 
@@ -833,7 +833,7 @@ extension MPreviewView {
         guard let vc = viewController as? ViewController else { return }
 
         // Get the selected note on main thread first
-        let currentName = vc.notesTableView.getSelectedNote()?.getExportTitle() ?? "MiaoYan"
+        let currentName = vc.notesTableView.getSelectedNote()?.getExportTitle() ?? "QingWu"
 
         // Perform file save on background queue
         DispatchQueue.global(qos: .utility).async {
@@ -1138,7 +1138,7 @@ extension MPreviewView {
 
         var attributes = doc.documentAttributes ?? [:]
         attributes[PDFDocumentAttribute.titleAttribute] = title
-        attributes[PDFDocumentAttribute.creatorAttribute] = "MiaoYan"
+        attributes[PDFDocumentAttribute.creatorAttribute] = "QingWu"
         doc.documentAttributes = attributes
 
         let pageCount = doc.pageCount

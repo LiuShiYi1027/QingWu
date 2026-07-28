@@ -3,12 +3,12 @@ import Foundation
 
 extension AppDelegate {
     enum HandledSchemes: String {
-        case miaoyan
+        case qingwu
         case nv
         case nvALT = "nvalt"
         case file
     }
-    enum MiaoYanRoutes: String {
+    enum QingWuRoutes: String {
         case find
         case new
         case goto
@@ -36,8 +36,8 @@ extension AppDelegate {
             } else {
                 self.urls = urls
             }
-        case HandledSchemes.miaoyan.rawValue:
-            MiaoYanRouter(url)
+        case HandledSchemes.qingwu.rawValue:
+            QingWuRouter(url)
         case HandledSchemes.nv.rawValue,
             HandledSchemes.nvALT.rawValue:
             NvALTRouter(url)
@@ -102,24 +102,24 @@ extension AppDelegate {
             }
         }
     }
-    // MARK: - MiaoYan routes
+    // MARK: - QingWu routes
     @MainActor
-    func MiaoYanRouter(_ url: URL) {
+    func QingWuRouter(_ url: URL) {
         guard let directive = url.host else { return }
         switch directive {
-        case MiaoYanRoutes.find.rawValue:
-            RouteMiaoYanFind(url)
-        case MiaoYanRoutes.new.rawValue:
-            RouteMiaoYanNew(url)
-        case MiaoYanRoutes.goto.rawValue:
-            RouteMiaoYanGoto(url)
+        case QingWuRoutes.find.rawValue:
+            RouteQingWuFind(url)
+        case QingWuRoutes.new.rawValue:
+            RouteQingWuNew(url)
+        case QingWuRoutes.goto.rawValue:
+            RouteQingWuGoto(url)
         default:
             break
         }
     }
     /// Handles URLs with the path /find/searchstring1%20searchstring2
     @MainActor
-    func RouteMiaoYanFind(_ url: URL) {
+    func RouteQingWuFind(_ url: URL) {
         let lastPath = url.lastPathComponent
         guard ViewController.shared() != nil else {
             searchQuery = lastPath
@@ -129,7 +129,7 @@ extension AppDelegate {
     }
 
     @MainActor
-    func RouteMiaoYanGoto(_ url: URL) {
+    func RouteQingWuGoto(_ url: URL) {
         let query = url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent
         guard let vc = ViewController.shared() else { return }
         let notes = vc.storage.noteList.filter { $0.title == query }
@@ -137,7 +137,7 @@ extension AppDelegate {
             vc.updateTable {
                 DispatchQueue.main.async {
                     vc.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
-                    self.RouteMiaoYanFind(url)
+                    self.RouteQingWuFind(url)
                     vc.toastMoreTitle()
                 }
             }
@@ -178,14 +178,14 @@ extension AppDelegate {
         }
     }
     /// Handles URLs with the following paths:
-    ///   - miaoyan://make/?title=URI-escaped-title&html=URI-escaped-HTML-data
-    ///   - miaoyan://make/?title=URI-escaped-title&txt=URI-escaped-plain-text
-    ///   - miaoyan://make/?txt=URI-escaped-plain-text
+    ///   - qingwu://make/?title=URI-escaped-title&html=URI-escaped-HTML-data
+    ///   - qingwu://make/?title=URI-escaped-title&txt=URI-escaped-plain-text
+    ///   - qingwu://make/?txt=URI-escaped-plain-text
     ///
     /// The three possible parameters (title, txt, html) are all optional.
     ///
     @MainActor
-    func RouteMiaoYanNew(_ url: URL) {
+    func RouteQingWuNew(_ url: URL) {
         var title = ""
         var body = ""
         if let titleParam = url["title"] {
@@ -226,16 +226,16 @@ extension AppDelegate {
     }
     /// Handle URLs in the format nv://find/searchstring1%20searchstring2
     ///
-    /// Note: this route is identical to the corresponding MiaoYan route.
+    /// Note: this route is identical to the corresponding QingWu route.
     ///
     @MainActor
     func RouteNvAltFind(_ url: URL) {
-        RouteMiaoYanFind(url)
+        RouteQingWuFind(url)
     }
 
     @MainActor
     func RouteNvAltGoto(_ url: URL) {
-        RouteMiaoYanGoto(url)
+        RouteQingWuGoto(url)
     }
     /// Handle URLs in the format nv://note%20title
     ///
@@ -245,7 +245,7 @@ extension AppDelegate {
     func RouteNvAltBlank(_ url: URL) {
         let pathWithFind = url.absoluteString.replacingOccurrences(of: "://", with: "://find/")
         guard let newURL = URL(string: pathWithFind) else { return }
-        RouteMiaoYanFind(newURL)
+        RouteQingWuFind(newURL)
     }
     /// Handle URLs in the format:
     ///

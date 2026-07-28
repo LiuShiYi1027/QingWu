@@ -1,9 +1,9 @@
 #!/bin/bash
-# MiaoYan Release Build Script - Build unsigned version
+# QingWu Release Build Script - Build unsigned version
 
 set -e
 
-EXTERNAL_SCRIPT="$HOME/.config/miaoyan/build.sh"
+EXTERNAL_SCRIPT="$HOME/.config/qingwu/build.sh"
 if [ -x "$EXTERNAL_SCRIPT" ]; then
   exec "$EXTERNAL_SCRIPT" "$@"
 fi
@@ -14,7 +14,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 # Auto-detect version from project.pbxproj
-VERSION=$(grep "MARKETING_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1 | sed 's/.*= \(.*\);/\1/' | tr -d ' ')
+VERSION=$(grep "MARKETING_VERSION" QingWu.xcodeproj/project.pbxproj | head -1 | sed 's/.*= \(.*\);/\1/' | tr -d ' ')
 [ -n "$1" ] && VERSION="$1"
 KEY_PATH="${SPARKLE_PRIVATE_KEY:-}"
 
@@ -24,60 +24,60 @@ if [ -z "$VERSION" ]; then
 fi
 
 echo ""
-echo "Building MiaoYan v$VERSION (unsigned)"
+echo "Building QingWu v$VERSION (unsigned)"
 echo "======================================"
 
 # 1. Clean
 echo "[1/6] Cleaning..."
 rm -rf ./build
-xcodebuild clean -scheme MiaoYan -configuration Release 2>/dev/null || true
+xcodebuild clean -scheme QingWu -configuration Release 2>/dev/null || true
 
 # 2. Archive
 echo "[2/6] Archiving..."
 xcodebuild archive \
-	-scheme MiaoYan \
+	-scheme QingWu \
 	-configuration Release \
-	-archivePath "./build/MiaoYan.xcarchive" \
+	-archivePath "./build/QingWu.xcarchive" \
 	CODE_SIGN_IDENTITY="" \
 	CODE_SIGNING_REQUIRED=NO \
 	CODE_SIGNING_ALLOWED=NO \
 	2>&1 | grep -E "(error:|ARCHIVE)" || true
 
-[ ! -d "./build/MiaoYan.xcarchive" ] && echo -e "${RED}ERROR: Archive failed${NC}" && exit 1
+[ ! -d "./build/QingWu.xcarchive" ] && echo -e "${RED}ERROR: Archive failed${NC}" && exit 1
 
 # 3. Export
 echo "[3/6] Exporting..."
 mkdir -p "./build/Release"
-cp -R "./build/MiaoYan.xcarchive/Products/Applications/MiaoYan.app" "./build/Release/MiaoYan.app"
+cp -R "./build/QingWu.xcarchive/Products/Applications/QingWu.app" "./build/Release/QingWu.app"
 
 # 4. Ad-hoc sign & package
 echo "[4/6] Signing & packaging..."
 # Clean attributes FIRST, then sign (otherwise signature is invalidated)
-xattr -cr "./build/Release/MiaoYan.app"
+xattr -cr "./build/Release/QingWu.app"
 # Sign frameworks explicitly first to ensure consistency
-if [ -d "./build/Release/MiaoYan.app/Contents/Frameworks" ]; then
-	find "./build/Release/MiaoYan.app/Contents/Frameworks" -depth -name "*.framework" -print0 | xargs -0 codesign --force --deep -s -
+if [ -d "./build/Release/QingWu.app/Contents/Frameworks" ]; then
+	find "./build/Release/QingWu.app/Contents/Frameworks" -depth -name "*.framework" -print0 | xargs -0 codesign --force --deep -s -
 fi
 # Sign the main application
-codesign --force --deep -s - "./build/Release/MiaoYan.app"
+codesign --force --deep -s - "./build/Release/QingWu.app"
 # Verify signature
-codesign -v "./build/Release/MiaoYan.app" || {
+codesign -v "./build/Release/QingWu.app" || {
 	echo "Signature verification failed"
 	exit 1
 }
 
-ZIP_NAME="MiaoYan_V${VERSION}.zip"
-DMG_NAME="MiaoYan.dmg"
+ZIP_NAME="QingWu_V${VERSION}.zip"
+DMG_NAME="QingWu.dmg"
 DOWNLOADS=~/Downloads
-APP_NAME="MiaoYan"
+APP_NAME="QingWu"
 BACKGROUND_IMAGE_SOURCE="./Resources/dmg-background.png"
 BACKGROUND_IMAGE_NAME="$(basename "$BACKGROUND_IMAGE_SOURCE")"
 
-/usr/bin/ditto -c -k --sequesterRsrc --keepParent "./build/Release/MiaoYan.app" "./build/$ZIP_NAME"
+/usr/bin/ditto -c -k --sequesterRsrc --keepParent "./build/Release/QingWu.app" "./build/$ZIP_NAME"
 
 # Create DMG with drag-to-Applications interface using hdiutil
 STAGING_DIR="./build/dmg_staging"
-TEMP_DMG_PATH="./build/MiaoYan_temp.dmg"
+TEMP_DMG_PATH="./build/QingWu_temp.dmg"
 DMG_BASE_PATH="./build/${DMG_NAME%.dmg}"
 
 # Cleanup function to detach existing volumes
@@ -147,7 +147,7 @@ cleanup_volumes
 
 rm -rf "$STAGING_DIR" "./build/$DMG_NAME" "$TEMP_DMG_PATH"
 mkdir -p "$STAGING_DIR"
-cp -R "./build/Release/MiaoYan.app" "$STAGING_DIR/"
+cp -R "./build/Release/QingWu.app" "$STAGING_DIR/"
 ln -s /Applications "$STAGING_DIR/Applications"
 
 if [[ -f "$BACKGROUND_IMAGE_SOURCE" ]]; then
@@ -220,7 +220,7 @@ xattr -cr "./build/$DMG_NAME" "./build/$ZIP_NAME"
 
 # 5. Sparkle signature
 echo "[5/6] Signing..."
-SIGN_UPDATE=$(ls -t ~/Library/Developer/Xcode/DerivedData/MiaoYan-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
+SIGN_UPDATE=$(ls -t ~/Library/Developer/Xcode/DerivedData/QingWu-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
 
 if [ -n "$SIGN_UPDATE" ] && [ -x "$SIGN_UPDATE" ]; then
 	if [ -n "$KEY_PATH" ] && [ -f "$KEY_PATH" ]; then
@@ -242,13 +242,13 @@ mv "./build/$DMG_NAME" "$DOWNLOADS/" && mv "./build/$ZIP_NAME" "$DOWNLOADS/"
 # 6. Done
 echo "[6/6] Done!"
 echo ""
-echo -e "${GREEN}MiaoYan v$VERSION build succeeded!${NC}"
+echo -e "${GREEN}QingWu v$VERSION build succeeded!${NC}"
 echo "  DMG: $DOWNLOADS/$DMG_NAME"
 echo "  ZIP: $DOWNLOADS/$ZIP_NAME"
 
 if [ -n "$SIGNATURE" ]; then
 	echo ""
 	echo "appcast.xml:"
-	echo "<enclosure url=\"https://miaoyan.app/Release/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
+	echo "<enclosure url=\"https://github.com/liushiyi1027/QingWu/releases/download/V$VERSION/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
 fi
 echo ""

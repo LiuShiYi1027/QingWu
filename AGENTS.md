@@ -1,4 +1,4 @@
-# MiaoYan Agent Guide
+# QingWu Agent Guide
 
 > `CLAUDE.md` is a symlink to this file. Claude Code, Codex, and any other
 > agent reading `AGENTS.md` share this single source so the guide stays in
@@ -9,10 +9,10 @@
 
 ## Project
 
-MiaoYan is a lightweight Markdown editor built with Swift. The main app is
+QingWu is a lightweight Markdown editor built with Swift. The main app is
 macOS/AppKit, and the repository also contains an iOS target under
-`MiaoYanMobile/`. Current version triplet: 4.1.0 (see `MARKETING_VERSION` /
-`CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj`).
+`QingWuMobile/`. Current version triplet: 1.0.0 (see `MARKETING_VERSION` /
+`CURRENT_PROJECT_VERSION` in `QingWu.xcodeproj/project.pbxproj`).
 
 ## Tech Stack
 
@@ -25,7 +25,7 @@ macOS/AppKit, and the repository also contains an iOS target under
   auto-save, and version history.
 - **Editor**: live preview, syntax highlight, keyboard shortcuts,
   Prettier-integrated auto-format.
-- **iOS target**: SwiftUI under `MiaoYanMobile/`, sharing core models in
+- **iOS target**: SwiftUI under `QingWuMobile/`, sharing core models in
   `Business/` with the macOS app.
 - **Dependencies**: SPM, declared in `Package.swift` (Sparkle, Highlightr,
   ZipArchive, swift-cmark-gfm, KeyboardShortcuts, Prettier). The `targets:`
@@ -42,17 +42,17 @@ macOS/AppKit, and the repository also contains an iOS target under
 - `Extensions/` - Swift extensions.
 - `Resources/` - bundled resources, including `DownView.bundle` (HTML/CSS/JS
   for preview) and `Localization/` (Base + es/ja/zh-Hans/zh-Hant).
-- `MiaoYanMobile/` - iOS app target: SwiftUI views, mobile services, mobile
+- `QingWuMobile/` - iOS app target: SwiftUI views, mobile services, mobile
   resources.
-- `MiaoYanTests/` - unit tests for pure-logic surfaces.
-- `MiaoYan.xcodeproj/` - Xcode project and version settings.
+- `QingWuTests/` - unit tests for pure-logic surfaces.
+- `QingWu.xcodeproj/` - Xcode project and version settings.
 - `Package.swift` / `Package.resolved` - SPM dependency declarations;
   platforms macOS 11 / iOS 18.
 - `scripts/` - local build, App Store, release, project maintenance scripts,
-  and the `miaoyan` CLI.
+  and the `qingwu` CLI.
 - `scripts/release-ci/` - release note rendering, appcast, notarization, and
   package helpers.
-- `skills/miaoyan/` - published Agent Skill (tracked) describing MiaoYan's
+- `skills/miaoyan/` - published Agent Skill (tracked) describing QingWu's
   Markdown, PPT, and `miao` CLI surfaces to outside agents; it restates
   product syntax, so it drifts when those surfaces change.
 - `.agents/skills/` - agent skills used when working in this repo.
@@ -68,15 +68,15 @@ macOS/AppKit, and the repository also contains an iOS target under
 ## Commands
 
 ```bash
-xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -configuration Debug build
+xcodebuild -project QingWu.xcodeproj -scheme QingWu -configuration Debug build
 xcodebuild clean
-xcodebuild test -project MiaoYan.xcodeproj -scheme MiaoYan -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
-xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYanMobile -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+xcodebuild test -project QingWu.xcodeproj -scheme QingWu -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+xcodebuild -project QingWu.xcodeproj -scheme QingWuMobile -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 swiftlint lint --strict
 swift-format lint --recursive . --strict   # --strict is what CI runs; without it a local pass can still fail CI
 bash scripts/build.sh
 bash scripts/build-appstore.sh
-ruby scripts/add_tests_target.rb     # only when re-wiring MiaoYanTests after pbxproj reset
+ruby scripts/add_tests_target.rb     # only when re-wiring QingWuTests after pbxproj reset
 ```
 
 Use the narrowest relevant command first. Full app builds are the default
@@ -84,7 +84,7 @@ verification for Swift or project changes.
 
 The Xcode project uses classic pbxproj groups (no filesystem-synchronized
 groups). Adding a new source file requires manual registration at 4 sites in
-`MiaoYan.xcodeproj/project.pbxproj`: a `PBXBuildFile` entry, a
+`QingWu.xcodeproj/project.pbxproj`: a `PBXBuildFile` entry, a
 `PBXFileReference` entry, the owning group's `children` list, and the target's
 `PBXSourcesBuildPhase` files list. Mimic an existing sibling entry and use a
 fresh unique 24-hex ID for each new object.
@@ -112,18 +112,18 @@ fresh unique 24-hex ID for each new object.
 
 ## Testing
 
-Unit tests live under `MiaoYanTests/`. Coverage targets pure-logic surfaces
+Unit tests live under `QingWuTests/`. Coverage targets pure-logic surfaces
 (`ImageLinkParser`, `WikilinkIndex.updateNote`, `String+`, frontmatter
 stripping, `TypographyCleaner`, etc.). UI flows are verified by manual smoke
 after build, not by XCUITest.
 
 Add a new test:
 
-1. Create `MiaoYanTests/<Subject>Tests.swift` (XCTest, `@MainActor` on the
+1. Create `QingWuTests/<Subject>Tests.swift` (XCTest, `@MainActor` on the
    test methods if they touch `@MainActor`-isolated types; `setUp()` overrides
    cannot be `@MainActor`, construct isolated objects inside the tests).
 2. Register the file manually at the same 4 pbxproj sites as an app source,
-   but into the `MiaoYanTests` group and the `MiaoYanTests` target's
+   but into the `QingWuTests` group and the `QingWuTests` target's
    `PBXSourcesBuildPhase`. Mimic the `NoteFrontmatterTests.swift` sibling
    entries. `scripts/add_tests_target.rb` is a no-op once the target exists
    (it only bootstraps the target after a pbxproj reset), and the `xcodeproj`
@@ -131,8 +131,8 @@ Add a new test:
 3. Run `xcodebuild test ...` locally, then push.
 
 `CODE_SIGNING_ALLOWED=NO` is required on the local test command because
-the dev signing identity used for `MiaoYan.app` and the per-developer
-identity used for `MiaoYanTests.xctest` end up with different Team IDs,
+the dev signing identity used for `QingWu.app` and the per-developer
+identity used for `QingWuTests.xctest` end up with different Team IDs,
 which makes dyld refuse to load the test bundle into the host app. `ci.yml`
 passes the same flag on every xcodebuild invocation, so it is not a
 local-only workaround.
@@ -143,7 +143,7 @@ local-only workaround.
 
 - macOS Debug build, then `xcodebuild test` for the unit suite (no signing
   required)
-- iOS Debug build for `MiaoYanMobile`. This job pins `runs-on: macos-26`
+- iOS Debug build for `QingWuMobile`. This job pins `runs-on: macos-26`
   because the iOS target uses iOS 26 SwiftUI APIs (glassEffect / Liquid
   Glass) that only ship in Xcode 26 SDKs; every other job is `macos-15`. If
   that runner is unavailable, wait for it rather than downgrading the iOS
@@ -166,7 +166,7 @@ maintainer-managed signing keys and run only on the maintainer's machine.
 - DEBUG: still prints to stdout (kept for Xcode console workflow).
 - RELEASE: routes through `Helpers/Diagnostics.swift`, which writes a
   `.fault` os_log entry plus a JSON-line ring buffer at
-  `~/Library/Logs/MiaoYan/diagnostics.log` (50 entries max).
+  `~/Library/Logs/QingWu/diagnostics.log` (50 entries max).
 - Users can attach the diagnostics log to bug reports without us running an
   analytics SDK (local-first stance).
 
@@ -198,7 +198,7 @@ string is the only breadcrumb the maintainer has when triaging.
 - Keep the macOS editor core, preview pipeline, and existing storyboard
   scenes on AppKit. A new self-contained panel may host SwiftUI through
   `NSHostingView`; that is not licence to push SwiftUI into `EditTextView` /
-  `MPreviewView` / `ViewController`. `MiaoYanMobile/` is SwiftUI throughout,
+  `MPreviewView` / `ViewController`. `QingWuMobile/` is SwiftUI throughout,
   and UI layers are not shared across the two targets.
 - Preserve recoverability for delete flows. Notes and attachments should move
   through the app Trash or system Trash path that matches the current
@@ -213,16 +213,16 @@ string is the only breadcrumb the maintainer has when triaging.
 ## Security Considerations
 
 - The app is local-first: no analytics SDK, no telemetry. Diagnostics stay on
-  the user's machine (`~/Library/Logs/MiaoYan/diagnostics.log`).
+  the user's machine (`~/Library/Logs/QingWu/diagnostics.log`).
 - The only outbound network call in normal use is image upload to a local
   PicGo/PicList endpoint at `127.0.0.1:36677`
   (`Helpers/ClipboardManager.swift`), permitted via `NSAllowsLocalNetworking`
   in the macOS `Info.plist`. Do not widen ATS back to
   `NSAllowsArbitraryLoads`.
-- Entitlements are split per channel: `MiaoYan.entitlements` (direct),
-  `MiaoYan-AppStore.entitlements` (sandboxed App Store),
-  `MiaoYanMobile.entitlements` (iOS).
-- The iOS preview scheme handler (`miaoyan-asset://` in
+- Entitlements are split per channel: `QingWu.entitlements` (direct),
+  `QingWu-AppStore.entitlements` (sandboxed App Store),
+  `QingWuMobile.entitlements` (iOS).
+- The iOS preview scheme handler (`qingwu-asset://` in
   `MobileHtmlRenderer.swift`) only serves files under the current library
   root (`allowedRoot`). Keep that root restriction when touching the handler.
 - Never commit signing keys, notarization credentials, Sparkle private keys,
@@ -239,7 +239,7 @@ When scope is incomplete, start with:
 2. `Controllers/AppDelegate.swift`
 3. `Controllers/MainWindowController.swift`
 4. `Controllers/ViewController.swift`
-5. `MiaoYanMobile/` when the task touches iOS, sync, mobile reading, or
+5. `QingWuMobile/` when the task touches iOS, sync, mobile reading, or
    mobile editing behavior
 6. Narrow related files under `Helpers/`, `Views/`, `Business/`, or
    `Extensions/`
@@ -265,9 +265,9 @@ unless the task targets them.
   loading, search, and sidebar refresh behavior. Keep `[[note]]` parsing,
   recursive search, and Trash exclusions consistent.
 - iCloud sync spans macOS storage, `Business/CloudSyncManager.swift`, and
-  `MiaoYanMobile/Services/CloudSyncManager.swift`. Verify fallback behavior
+  `QingWuMobile/Services/CloudSyncManager.swift`. Verify fallback behavior
   when iCloud is unavailable.
-- `MiaoYanMobile/` is a real iOS target, not sample code. Keep SwiftUI, file
+- `QingWuMobile/` is a real iOS target, not sample code. Keep SwiftUI, file
   reading, mobile rendering, and target membership aligned.
 - Trash handling spans `Business/Storage.swift`, `Business/Note.swift`,
   sidebar drag/drop, attachment cleanup, and system Trash fallback.
@@ -282,7 +282,7 @@ unless the task targets them.
   reads on the main thread for large notes or previews.
 - Directory symlinks are supported by storage scanning. Avoid recursion loops
   and duplicate notes when following symlinked directories.
-- The iOS editor is `MiaoYanMobile/Views/MarkdownEditorView.swift` +
+- The iOS editor is `QingWuMobile/Views/MarkdownEditorView.swift` +
   `Services/MarkdownHighlighter.swift`: plain-markdown UITextView with regex
   highlighting. Never mutate `textStorage` attributes while
   `markedTextRange != nil` (breaks CJK IME composition), and keep
@@ -291,7 +291,7 @@ unless the task targets them.
 - Note attachments follow the shared `i/` convention: images live in an `i/`
   folder next to the note, referenced as `![](/i/<name>)` on both platforms.
   The iOS reader cannot load `file://` subresources (`loadHTMLString`), so
-  `MobileHtmlRenderer` rewrites local srcs to the `miaoyan-asset://` scheme
+  `MobileHtmlRenderer` rewrites local srcs to the `qingwu-asset://` scheme
   served by `LocalAssetSchemeHandler`, which only serves files under the
   current library root (`allowedRoot`). Keep that root restriction when
   touching the handler.
@@ -302,7 +302,7 @@ unless the task targets them.
   `loadFileURL` (file://), not a local web server, so ATS does not gate
   preview rendering.
 - iOS user-facing strings live in
-  `MiaoYanMobile/Resources/Localizable.xcstrings` and ship `en` + `zh-Hans`
+  `QingWuMobile/Resources/Localizable.xcstrings` and ship `en` + `zh-Hans`
   only (the macOS app ships five languages). Add a `zh-Hans` value for every
   new iOS string, or Chinese users fall back to English.
 - `renderMarkdownHTML` in `Business/Markdown.swift` is the single
@@ -320,7 +320,7 @@ unless the task targets them.
   appcast body and the iOS preview). The copies are deliberately duplicated
   per platform: `Note.cleanMetaData` (macOS),
   `MobileHtmlRenderer.stripFrontmatter` (iOS preview) and the private
-  `stripFrontmatter` in `MiaoYanMobile/Services/FileReader.swift` must keep
+  `stripFrontmatter` in `QingWuMobile/Services/FileReader.swift` must keep
   identical semantics; change all three in the same commit. CRLF gotcha all
   copies share: `"\r\n"` is one Swift grapheme, so `range(of: "\n---")` never
   matches inside it; search both `"\n---"` and `"\r\n---"`.
@@ -338,7 +338,7 @@ unless the task targets them.
 
 ## Release Channels
 
-MiaoYan ships through two independent channels. Publishing one never updates
+QingWu ships through two independent channels. Publishing one never updates
 the other: one version means two separate publishes, and release readiness
 must be reported per channel.
 
@@ -363,7 +363,7 @@ must be reported per channel.
 
 - Tag format is uppercase `Vx.y.z`.
 - Version changes must keep both `MARKETING_VERSION` and
-  `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` aligned
+  `CURRENT_PROJECT_VERSION` in `QingWu.xcodeproj/project.pbxproj` aligned
   with the release tag. Sparkle compares `sparkle:version` in appcast.xml
   against `CFBundleVersion` (mapped from `CURRENT_PROJECT_VERSION`), not
   `CFBundleShortVersionString`. If the two diverge, users get an infinite
@@ -379,7 +379,7 @@ must be reported per channel.
 - Publishing ends with the six positive reactions (`+1`, `laugh`, `heart`,
   `hooray`, `rocket`, `eyes`) added via `gh api` and read back to confirm.
   Never add `-1` or `confused`.
-- Direct-download Sparkle signing must use the MiaoYan release key, not the
+- Direct-download Sparkle signing must use the QingWu release key, not the
   default Sparkle Keychain account. Before pushing appcast changes, verify
   the signature against the published ZIP and the app's embedded
   `SUPublicEDKey` with `scripts/release-ci/verify_sparkle_signature.sh`; a
@@ -399,7 +399,7 @@ must be reported per channel.
   attempt does not hold, stop guessing and add `#if DEBUG` runtime logging to
   capture evidence before the next code change.
 - Lint or formatting changes: run SwiftLint and swift-format checks.
-- iOS changes: verification bar equals macOS. Inspect `MiaoYanMobile/` target
+- iOS changes: verification bar equals macOS. Inspect `QingWuMobile/` target
   membership, build, then run the affected flow in the Simulator (for example
   the new-note title flow or preview first frame) before reporting done; a
   green build alone is not done. Performance complaints need a measurable

@@ -1,5 +1,5 @@
 /* About Window */
-"About" = "Acerca de MiaoYan";
+"About" = "Acerca de QingWu";
 
 /* No comment provided by engineer. */
 "Add" = "Añadir";
@@ -30,7 +30,7 @@
 
 
 /* No comment provided by engineer. */
-"MiaoYan [preview]" = "MiaoYan [vista previa]";
+"MiaoYan [preview]" = "QingWu [vista previa]";
 
 /* No comment provided by engineer. */
 "Link" = "Enlace";
@@ -96,7 +96,7 @@
 "Editing" = "Edición";
 "Full Width" = "Ancho Completo";
 "Line Break:" = "Salto de Línea:";
-"MiaoYan" = "MiaoYan";
+"QingWu" = "QingWu";
 "Auto" = "Auto";
 
 /* No comment provided by engineer. */
@@ -130,7 +130,7 @@
 "Preferences" = "Preferencias";
 
 /* No comment provided by engineer. */
-"Quit MiaoYan" = "Salir de MiaoYan";
+"Quit MiaoYan" = "Salir de QingWu";
 
 /* Delete menu */
 "Remove" = "Eliminar";
@@ -179,7 +179,7 @@
 
 
 
-"%d MiaoYan" = "%d MiaoYan";
+"%d MiaoYan" = "%d QingWu";
 
 "PDF export failed, please try again~" = "Falló la exportación a PDF, por favor inténtalo de nuevo~";
 
@@ -202,7 +202,7 @@
 "Please make sure your title exists~" = "Por favor asegúrate de que tu título exista~";
 "Found that there are multiple titles of this~" = "Se encontró que hay múltiples títulos de esto~";
 "URL is successfully copied, Use it anywhere~" = "La URL se copió correctamente, úsala en cualquier lugar~";
-"No delimiter --- identification, Cannot use MiaoYan PPT~" = "No hay identificador de delimitador ---, no se puede usar MiaoYan PPT~";
+"No delimiter --- identification, Cannot use QingWu PPT~" = "No hay identificador de delimitador ---, no se puede usar QingWu PPT~";
 "Formatting failed, please try again" = "El formato falló, por favor inténtalo de nuevo";
 "Formatting cancelled" = "Formato cancelado";
 
@@ -212,7 +212,7 @@
 "Edit Link…" = "Editar Enlace…";
 "Remove Link" = "Eliminar Enlace";
 
-"Restart to MiaoYan to take effect" = "Reinicia MiaoYan para que surta efecto";
+"Restart to QingWu to take effect" = "Reinicia QingWu para que surta efecto";
 "Confirm" = "Confirmar";
 
 /* Font Names */
@@ -277,8 +277,8 @@
 "No importable Markdown files found~" = "No se encontraron archivos Markdown importables~";
 "Could not use this folder" = "No se pudo usar esta carpeta";
 "Selected storage folder is not a folder." = "La ubicación seleccionada no es una carpeta.";
-"MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "MiaoYan no puede leer esta carpeta. Si es una unidad en la nube, abre la app del proveedor y confirma que la carpeta aparece en Finder.";
-"MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "MiaoYan no puede escribir en esta carpeta. Elige una carpeta editable o activa el acceso sin conexión en la app de la nube.";
+"QingWu cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "QingWu no puede leer esta carpeta. Si es una unidad en la nube, abre la app del proveedor y confirma que la carpeta aparece en Finder.";
+"QingWu cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "QingWu no puede escribir en esta carpeta. Elige una carpeta editable o activa el acceso sin conexión en la app de la nube.";
 
 /* Reload Note */
 "Reload Note" = "Recargar Nota";

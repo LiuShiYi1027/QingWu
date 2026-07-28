@@ -1,5 +1,5 @@
 /**
- * MiaoYan App Main Entry
+ * QingWu App Main Entry
  */
 
 class MiaoYanApp {

@@ -14,7 +14,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
         let lineBreakRow = createSettingRow(
             label: I18n.str("Line Break:"),
-            options: [localizedLineBreak("MiaoYan"), localizedLineBreak("Github")],
+            options: [localizedLineBreak("QingWu"), localizedLineBreak("Github")],
             action: #selector(lineBreakChanged(_:))
         )
         settingsStackView.addArrangedSubview(lineBreakRow)
@@ -161,14 +161,14 @@ final class EditorPrefsViewController: BasePrefsViewController {
     // MARK: - Localization Helpers for raw/display mapping
     private func localizedLineBreak(_ raw: String) -> String {
         switch raw {
-        case "MiaoYan": return I18n.str("MiaoYan")
+        case "QingWu": return I18n.str("QingWu")
         case "Github": return I18n.str("Github")
         default: return raw
         }
     }
 
     private func rawLineBreak(from display: String) -> String {
-        if display == I18n.str("MiaoYan") { return "MiaoYan" }
+        if display == I18n.str("QingWu") { return "QingWu" }
         if display == I18n.str("Github") { return "Github" }
         return display
     }

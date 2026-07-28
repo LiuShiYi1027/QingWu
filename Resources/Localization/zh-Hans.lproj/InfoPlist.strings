@@ -1,10 +1,10 @@
 /* InfoPlist.strings
-  MiaoYan
+  QingWu
   Created by Tw93 on 2022/6/9. */
-"CFBundleDisplayName" = "妙言";
+"CFBundleDisplayName" = "青梧";
 
 /* Bundle name */
-"CFBundleName" = "妙言";
+"CFBundleName" = "青梧";
 
 /* (No Comment) */
 "Markdown" = "Markdown";

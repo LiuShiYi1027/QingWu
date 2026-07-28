@@ -1,25 +1,11 @@
-<h4 align="right"><strong><a href="https://github.com/tw93/MiaoYan">English</a></strong> | 简体中文</h4>
+<h4 align="right"><strong><a href="https://github.com/liushiyi1027/QingWu">English</a></strong> | 简体中文</h4>
 
 <p align="center">
-  <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
-  <h1 align="center">妙言</h1>
-  <div align="center">
-    <a href="https://twitter.com/HiTw93" target="_blank">
-      <img alt="Twitter 关注" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
-    <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank">
-      <img alt="Telegram 群组" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
-    <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">
-      <img alt="GitHub 下载量" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
-    <a href="https://github.com/tw93/MiaoYan/commits" target="_blank">
-      <img alt="GitHub 提交活跃度" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
-    <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed" target="_blank">
-      <img alt="GitHub 已关闭议题" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
-    <img alt="macOS 11.5+" src="https://img.shields.io/badge/macOS-11.5%2B-orange?style=flat-square">
-  </div>
-  <div align="center">轻灵的 Markdown 笔记本伴你写出妙言</div>
+  <h1 align="center">青梧</h1>
+  <div align="center">轻灵的 Markdown 笔记本</div>
 </p>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
+青梧（QingWu）fork 自 Tw93 的 [MiaoYan](https://github.com/tw93/MiaoYan)（MIT License）。
 
 ## 特点
 
@@ -30,42 +16,33 @@
 
 ## 安装使用
 
-1. **Mac App Store**(付费,自动更新):
+**GitHub Releases**: 从 [GitHub Releases](https://github.com/liushiyi1027/QingWu/releases/latest) 下载最新 DMG(macOS 11.5+)
 
-   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+安装后在 iCloud 云盘、坚果云桌面同步目录或其他位置创建 `QingWu` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
 
-2. **Homebrew**:
-   ```bash
-   brew install --cask miaoyan
-   ```
+## 用坚果云或其他云盘同步青梧
 
-3. **GitHub Releases**: 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG(macOS 11.5+)
+青梧保持本地优先,不会登录 WebDAV 或网盘账号。它只读写你指定的 Markdown 文件夹,跨设备同步由 iCloud Drive、坚果云、Dropbox 等云盘客户端负责。
 
-三种方式共享同一份代码,功能完全一致,同步更新。安装后在 iCloud 云盘、坚果云桌面同步目录或其他位置创建 `MiaoYan` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
-
-## 用坚果云或其他云盘同步妙言
-
-妙言保持本地优先,不会登录 WebDAV 或网盘账号。它只读写你指定的 Markdown 文件夹,跨设备同步由 iCloud Drive、坚果云、Dropbox 等云盘客户端负责。
-
-- **Mac**: 在坚果云桌面客户端的同步目录中创建 `MiaoYan` 文件夹,然后在妙言设置中把存储位置指向它。
+- **Mac**: 在坚果云桌面客户端的同步目录中创建 `QingWu` 文件夹,然后在青梧设置中把存储位置指向它。
 - **iPhone**: 在系统“文件”App 中选择同一个云盘文件夹。若某个云盘 App 没有暴露可写文件夹,建议使用 iCloud Drive,或先在云盘 App 中让该文件夹可离线访问后再选择。
-- **目录检查**: 妙言会在切换目录前确认文件夹可读取、可写入。不可用时不会保存新路径,也不会把问题误报成妙言自己的云同步失败。
+- **目录检查**: 青梧会在切换目录前确认文件夹可读取、可写入。不可用时不会保存新路径,也不会把问题误报成青梧自己的云同步失败。
 
 ## 命令行工具
 
-妙言提供命令行工具，方便在终端中快速操作笔记。
+青梧提供命令行工具，方便在终端中快速操作笔记。
 
 ```bash
 # 安装
-curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/liushiyi1027/QingWu/main/scripts/install.sh | bash
 
 # 使用
-miao open <标题|路径>    # 打开笔记或文件夹
-miao new <标题> [内容]   # 创建新笔记
-miao search <关键词>     # 在终端搜索笔记
-miao list [folder]      # 列出一级目录，或列出指定目录下的 Markdown
-miao cat <标题|路径>     # 输出笔记内容
-miao update             # 更新 CLI
+qingwu open <标题|路径>    # 打开笔记或文件夹
+qingwu new <标题> [内容]   # 创建新笔记
+qingwu search <关键词>     # 在终端搜索笔记
+qingwu list [folder]      # 列出一级目录，或列出指定目录下的 Markdown
+qingwu cat <标题|路径>     # 输出笔记内容
+qingwu update             # 更新 CLI
 ```
 
 ## 分栏编辑预览模式
@@ -76,32 +53,23 @@ miao update             # 更新 CLI
 
 为什么不做 Typora 式即时预览？我们追求纯粹的 Markdown 编辑体验，用 Swift 原生实现即时预览过于复杂且稳定性难以保证。分栏模式在保持纯净编辑体验的同时，提供了实时的视觉反馈。
 
-<img src="https://gw.alipayobjects.com/zos/k/eg/jV8Gra.png" width="100%" alt="分栏编辑预览模式" />
-
 ## 使用指南
 
-- [介绍妙言](Resources/Initial/介绍妙言.md) - 完整使用指南,包含快捷键等
-- [Markdown 语法指南](Resources/Initial/妙言%20Markdown%20语法指南.md) - 完整语法演示,数学公式、图表等
-- [PPT 演示模式](Resources/Initial/妙言%20PPT.md) - 使用 `---` 分隔幻灯片的演示指南
-- [妙言 Agent Skill](skills/miaoyan) - 让 Agent 掌握妙言语法、附件、PPT 与 CLI 使用方式
-
-运行 `npx skills add tw93/MiaoYan/skills/miaoyan -g` 安装官方 Skill。
-
-## 支持
-
-1. 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，是对我最直接的支持。
-2. 如果你喜欢妙言，欢迎给它一个 Star，更欢迎推荐给你志同道合的朋友使用。
-3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+9f9gf4ZrFSQ2OWVl) 聊天群。
-4. 我有两只猫：汤圆、可乐，若妙言让你开心，<a href="https://cats.tw93.fun" target="_blank">请她们吃罐头 🥩</a>。
+- [介绍青梧](Resources/Initial/介绍青梧.md) - 完整使用指南,包含快捷键等
+- [Markdown 语法指南](Resources/Initial/青梧%20Markdown%20语法指南.md) - 完整语法演示,数学公式、图表等
+- [PPT 演示模式](Resources/Initial/青梧%20PPT.md) - 使用 `---` 分隔幻灯片的演示指南
+- [青梧 Agent Skill](skills/miaoyan) - 让 Agent 掌握青梧语法、附件、PPT 与 CLI 使用方式
 
 ## 致谢
 
+- [tw93/MiaoYan](https://github.com/tw93/MiaoYan) - 青梧 fork 的上游项目
 - [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes) - 项目初始结构参考
 - [stackotter/swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm) - Swift Markdown 解析器
 - [simonbs/Prettier](https://github.com/simonbs/Prettier) - Markdown 格式化工具
 - [raspu/Highlightr](https://github.com/raspu/Highlightr) - 语法高亮支持
 - [仓耳字库](https://tsanger.cn/product) - 仓耳今楷字体(默认字体)
 - [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT 演示框架
+
 ## 协议
 
 MIT License - 欢迎自由使用与贡献

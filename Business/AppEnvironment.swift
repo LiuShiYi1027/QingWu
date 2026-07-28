@@ -10,7 +10,7 @@ import Foundation
 /// it costs more than it returns), but to give new code one place to look
 /// and to make the SwiftLint custom rule meaningful.
 ///
-/// Scope: macOS target only. iOS `MiaoYanMobile` has its own service
+/// Scope: macOS target only. iOS `QingWuMobile` has its own service
 /// composition (e.g. `CloudSyncManager`) and is not folded into this facade.
 ///
 /// `AppEnvironment.current` is a facade, not a container. It does not own

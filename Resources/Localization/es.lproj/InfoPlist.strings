@@ -1,9 +1,9 @@
 /*
   InfoPlist.strings
-  MiaoYan
+  QingWu
 */
 
 
-"CFBundleDisplayName" = "MiaoYan";
+"CFBundleDisplayName" = "QingWu";
 
-"CFBundleName" = "MiaoYan";
+"CFBundleName" = "QingWu";

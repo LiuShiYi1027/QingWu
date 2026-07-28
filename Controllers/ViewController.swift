@@ -680,7 +680,7 @@ class ViewController:
         }
 
         if menuItem.action == #selector(exportMiaoYanPPT(_:)) {
-            return isMiaoYanPPT(needToast: false)
+            return isQingWuPPT(needToast: false)
         }
 
         if menuItem.action == #selector(toggleMagicPPT(_:)) {
@@ -988,10 +988,10 @@ class ViewController:
     }
 
     func applyModernChromeStyling() {
-        view.applyMiaoYanPaneBackground()
-        notesListCustomView.applyMiaoYanPaneBackground()
-        outlineHeader.applyMiaoYanPaneBackground()
-        projectHeaderView.applyMiaoYanPaneBackground()
+        view.applyQingWuPaneBackground()
+        notesListCustomView.applyQingWuPaneBackground()
+        outlineHeader.applyQingWuPaneBackground()
+        projectHeaderView.applyQingWuPaneBackground()
 
         storageOutlineView.backgroundColor = Theme.paneBackgroundColor
         notesTableView.backgroundColor = Theme.paneBackgroundColor
@@ -1265,7 +1265,7 @@ class ViewController:
         // modes move EditTextView.note without refilling textStorage).
         guard textView.storageNote === note else {
             let mismatch = NSError(
-                domain: "com.tw93.miaoyan.race",
+                domain: "com.qingwu.app.race",
                 code: 1,
                 userInfo: [NSLocalizedDescriptionKey: "textStorage owner drift in textDidChange"])
             AppDelegate.trackError(mismatch, context: "ViewController.textDidChange.ownerGuard")
@@ -1327,7 +1327,7 @@ class ViewController:
                 let timestamp = formatter.string(from: Date())
                 let logMessage = "\(timestamp) [ViewController] \(message)\n"
 
-                let fileURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads/miaoyan_debug.log")
+                let fileURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads/qingwu_debug.log")
 
                 if let handle = try? FileHandle(forWritingTo: fileURL) {
                     handle.seekToEndOfFile()

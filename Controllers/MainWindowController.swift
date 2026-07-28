@@ -33,7 +33,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             object: nil
         )
 
-        applyMiaoYanAppearance()
+        applyQingWuAppearance()
         observeAppearanceChanges()
     }
 
@@ -71,7 +71,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             UserDataService.instance.isDark = effectiveAppearance.isDark
         }
 
-        applyMiaoYanAppearance()
+        applyQingWuAppearance()
 
         if let vc = AppContext.shared.viewController {
             vc.editArea.applySystemAppearance()
@@ -108,7 +108,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func makeNew() {
-        applyMiaoYanAppearance()
+        applyQingWuAppearance()
 
         // Check if window needs to be shown (and wasn't just minimized)
         // We use a fade-in effect to mask any potential white flashes during initial render
@@ -216,13 +216,13 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             if vc.sessionPresentationMode {
                 vc.disablePresentation()
             } else if vc.sessionMagicPPTMode {
-                vc.disableMiaoYanPPT()
+                vc.disableQingWuPPT()
             }
         }
     }
 
     func windowDidBecomeKey(_ notification: Notification) {
-        applyMiaoYanAppearance()
+        applyQingWuAppearance()
 
         // Ensure WebView background is transparent to avoid white flashes on reactivation
         if let vc = AppContext.shared.viewController,
@@ -277,7 +277,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         }
     }
 
-    func applyMiaoYanAppearance() {
+    func applyQingWuAppearance() {
         guard let window = window else { return }
 
         let targetAppearance: NSAppearance?

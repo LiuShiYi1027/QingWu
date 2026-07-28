@@ -613,7 +613,7 @@ public class Note: NSObject {
             AppDelegate.trackError(error, context: "Note.write")
 
             Task { @MainActor in
-                MiaoYanAlert.show(
+                QingWuAlert.show(
                     message: I18n.str("Save Failed"),
                     informativeText: I18n.str(error.localizedDescription),
                     style: .warning

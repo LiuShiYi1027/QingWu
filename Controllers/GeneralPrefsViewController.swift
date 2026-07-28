@@ -150,7 +150,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             if let appDelegate = NSApp.delegate as? AppDelegate,
                 let mainWindowController = appDelegate.mainWindowController
             {
-                mainWindowController.applyMiaoYanAppearance()
+                mainWindowController.applyQingWuAppearance()
             }
 
             if let prefsWindow = view.window?.windowController as? PrefsWindowController {
@@ -249,7 +249,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         } else {
             message = error.localizedDescription
         }
-        MiaoYanAlert.show(
+        QingWuAlert.show(
             message: I18n.str("Could not use this folder"),
             informativeText: message,
             style: .warning,
