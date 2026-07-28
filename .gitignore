@@ -102,6 +102,7 @@ Resources/DownView.bundle/demo.html
 # Legacy & Deprecated
 IrEditor/
 fonts/
+!Resources/Fonts/
 
 # AI agent files
 # CLAUDE.md and AGENTS.md are committed (CLAUDE.md is a symlink to AGENTS.md);
