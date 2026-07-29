@@ -86,9 +86,9 @@ final class LogseqRenderTests: XCTestCase {
         let markdown = "- parent\n\t- child [[Some Page]]\n\t- second child"
         let html = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false)!
 
-        XCTAssertTrue(html.contains("<ul>"), "tab-indented outline must render as a list, got: \(html)")
+        XCTAssertTrue(html.contains("<ul"), "tab-indented outline must render as a list, got: \(html)")
         XCTAssertTrue(html.contains("child"))
-        XCTAssertFalse(html.contains("<pre><code"))
+        XCTAssertFalse(html.contains("<pre"))
     }
 
     func testTopLevelTabbedBlockRendersAsList() {
@@ -96,15 +96,16 @@ final class LogseqRenderTests: XCTestCase {
         let markdown = "## Welcome\n\t- Click on [[Project/PKM Workshop]]"
         let html = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false)!
 
-        XCTAssertTrue(html.contains("<ul>"))
-        XCTAssertFalse(html.contains("<pre><code"))
+        XCTAssertTrue(html.contains("<ul"))
+        XCTAssertFalse(html.contains("<pre"))
     }
 
     func testTabsInsideCodeFenceArePreserved() {
         let markdown = "```\n\t- not a list\n```"
         let html = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false)!
 
-        XCTAssertTrue(html.contains("<pre><code"))
-        XCTAssertFalse(html.contains("<ul>"))
+        XCTAssertTrue(html.contains("<pre"))
+        XCTAssertTrue(html.contains("- not a list"))
+        XCTAssertFalse(html.contains("<ul"))
     }
 }
