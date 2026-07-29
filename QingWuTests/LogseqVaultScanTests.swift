@@ -40,6 +40,7 @@ final class LogseqVaultScanTests: XCTestCase {
         makeFile(".stversions/journals/2026_07_29.md")
     }
 
+    @MainActor
     func testReservedFolderNamesCoverLogseqInternals() {
         for name in ["logseq", "assets", "i", "files", ".Trash"] {
             XCTAssertTrue(Storage.reservedFolderNames.contains(name), "\(name) should be reserved")
