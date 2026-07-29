@@ -19,6 +19,9 @@
 /* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
 "2Ci-Yj-aWK.title" = "新增";
 
+/* Class = "NSMenuItem"; title = "Today's Journal"; ObjectID = "dN1-jR-nal"; */
+"dN1-jR-nal.title" = "今日筆記";
+
 /* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
 "xgO-jF-1ab.title" = "Tab快捷輸入";
 

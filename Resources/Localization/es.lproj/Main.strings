@@ -23,6 +23,9 @@
 /* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
 "2Ci-Yj-aWK.title" = "Nuevo";
 
+/* Class = "NSMenuItem"; title = "Today's Journal"; ObjectID = "dN1-jR-nal"; */
+"dN1-jR-nal.title" = "Diario de hoy";
+
 /* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
 "xgO-jF-1ab.title" = "Entrada Rápida";
 

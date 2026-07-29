@@ -864,6 +864,64 @@ extension ViewController {
         }
     }
 
+    // MARK: - Daily note
+
+    /// Opens (or creates) today's journal note, Logseq-style:
+    /// `journals/yyyy_MM_dd.md` under the storage root. A vault without a
+    /// `journals/` folder gets one created on demand; it turns into a normal
+    /// sidebar project on the next storage rescan.
+    @IBAction func openDailyNote(_ sender: NSMenuItem) {
+        openTodaysJournal()
+    }
+
+    /// Logseq-compatible journal file name: `yyyy_MM_dd` (no extension).
+    nonisolated static func dailyNoteName(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy_MM_dd"
+        return formatter.string(from: date)
+    }
+
+    func openTodaysJournal(date: Date = Date()) {
+        let name = ViewController.dailyNoteName(for: date)
+
+        guard let journals = storage.getProjects().first(where: { $0.url.lastPathComponent == "journals" }) else {
+            guard let storageRoot = UserDefaultsManagement.storageUrl else { return }
+            let journalsURL = storageRoot.appendingPathComponent("journals", isDirectory: true)
+            try? FileManager.default.createDirectory(at: journalsURL, withIntermediateDirectories: true)
+            createNote(name: name, project: Project(url: journalsURL, label: "journals"), load: true)
+            return
+        }
+
+        if let existing = storage.noteList.first(where: { $0.project == journals && $0.title == name }) {
+            selectNoteInSidebar(existing)
+            return
+        }
+
+        createNote(name: name, project: journals, load: true)
+    }
+
+    /// Selects an already-loaded note: sidebar project first, then the table
+    /// row, mirroring the `qingwu://goto/` single-match path.
+    private func selectNoteInSidebar(_ note: Note) {
+        var sidebarIndex = 0
+        if let items = storageOutlineView.sidebarItems,
+            let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == note.project })
+        {
+            sidebarIndex = storageOutlineView.row(forItem: sidebarItem)
+        }
+        updateTable {
+            DispatchQueue.main.async {
+                self.storageOutlineView.selectRowIndexes([sidebarIndex], byExtendingSelection: false)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+                    if let index = self.notesTableView.noteList.firstIndex(where: { $0 === note }) {
+                        self.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
+                        self.notesTableView.scrollRowToVisible(row: index, animated: false)
+                    }
+                }
+            }
+        }
+    }
+
     func createNote(name: String = "", content: String = "", type: NoteType? = nil, project: Project? = nil, load: Bool = false) {
         if exitReadOnlyModeIfNeededBeforeCreatingNote(name: name, content: content, type: type, project: project, load: load) {
             return

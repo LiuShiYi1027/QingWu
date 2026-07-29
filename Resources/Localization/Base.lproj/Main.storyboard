@@ -86,6 +86,11 @@ CA
                                                 <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Today's Journal" keyEquivalent="D" identifier="fileMenu.dailyNote" id="dN1-jR-nal">
+                                            <connections>
+                                                <action selector="openDailyNote:" target="L4m-js-agn" id="dN1-jR-act"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Single Mode" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
                                             <connections>
                                                 <action selector="singleOpen:" target="L4m-js-agn" id="48w-4H-ICT"/>

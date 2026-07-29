@@ -55,6 +55,9 @@
 /* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
 "2Ci-Yj-aWK.title" = "新建";
 
+/* Class = "NSMenuItem"; title = "Today's Journal"; ObjectID = "dN1-jR-nal"; */
+"dN1-jR-nal.title" = "今日笔记";
+
 /* Class = "NSMenuItem"; title = "Search"; ObjectID = "hPY-aY-QOE"; */
 "hPY-aY-QOE.title" = "搜索";
 
