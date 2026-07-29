@@ -53,8 +53,8 @@ final class LogseqVaultScanTests: XCTestCase {
     func testSubFolderDiscoverySkipsLogseqAndAssets() {
         makeVault()
 
-        let subFolders = Storage.sharedInstance().getSubFolders(url: vaultDir)?
-            .compactMap { ($0 as URL).lastPathComponent } ?? []
+        let subFolders = Storage.sharedInstance().getSubFolders(url: vaultDir)
+            ?.compactMap { ($0 as URL).lastPathComponent } ?? []
 
         XCTAssertTrue(subFolders.contains("journals"))
         XCTAssertTrue(subFolders.contains("pages"))
