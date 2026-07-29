@@ -91,7 +91,9 @@ struct FolderItem: Identifiable, Sendable {
 
 enum NoteFileStore {
     private static let allowedExtensions: Set<String> = ["md", "markdown", "txt"]
-    private static let ignoredFolderNames: Set<String> = ["i", "files", ".Trash", "Trash"]
+    /// Mirrors macOS `Storage.reservedFolderNames` — change both in the same commit.
+    /// `logseq` / `assets` keep Logseq vault internals out of the library and search.
+    private static let ignoredFolderNames: Set<String> = ["i", "files", ".Trash", "Trash", "logseq", "assets"]
     private static let previewByteLimit = 900
     private static let recentNoteLimit = 40
     /// Bytes read off disk for search snippet matching. Most matches in

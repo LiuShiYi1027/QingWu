@@ -36,6 +36,12 @@ class Storage {
     ]
     private static let attachmentDirectoryNames = ["i", "files"]
 
+    /// Folder names never surfaced as projects or scanned for notes.
+    /// `logseq` and `assets` keep Logseq vault internals (config, backups,
+    /// attachments) out of the sidebar. Mirrored by QingWuMobile's
+    /// `NoteFileStore.ignoredFolderNames` — change both in the same commit.
+    static let reservedFolderNames: Set<String> = ["assets", ".cache", "i", ".Trash", "files", "logseq"]
+
     var pinned: Int = 0
 
     private var bookmarks = [URL]()
@@ -130,6 +136,7 @@ class Storage {
                 guard !projectExist(url: subUrl),
                     subUrl.lastPathComponent != "i",
                     subUrl.lastPathComponent != "files",
+                    !Storage.reservedFolderNames.contains(subUrl.lastPathComponent),
                     !subUrl.path.contains(".Trash"),
                     !subUrl.path.contains("Trash"),
                     !subUrl.path.contains("/."),
@@ -942,7 +949,7 @@ class Storage {
             extensions.append(ext)
         }
         // Specific folder names to skip
-        let skipFolders = Set(["assets", ".cache", "i", ".Trash", "files"])
+        let skipFolders = Storage.reservedFolderNames
 
         var subDirs = [NSURL]()
 

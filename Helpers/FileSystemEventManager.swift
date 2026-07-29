@@ -297,23 +297,15 @@ class FileSystemEventManager {
     }
 
     private func writeConflictBackup(for note: Note, editorContent: String) {
-        // Conflicts must NOT live under the note's project directory:
-        // the project is in `observedFolders` so FSEvents would re-fire for
-        // our own write and import the backup as a brand-new note (with a
-        // hideous .myNote-conflict-2026-... title cluttering the sidebar).
-        // Instead route every project's conflicts to a single hidden
-        // sibling of the storage root, which is never registered as a
-        // project and therefore never observed.
-        guard let storageRoot = UserDefaultsManagement.storageUrl else {
-            let err = NSError(
-                domain: "com.qingwu.app.conflict",
-                code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "storageUrl unavailable, conflict backup skipped"])
-            AppDelegate.trackError(err, context: "FileSystemEventManager.writeConflictBackup")
-            return
-        }
-
-        let conflictsRoot = storageRoot.appendingPathComponent(".qingwu-conflicts", isDirectory: true)
+        // Conflicts must NOT live inside the storage root: it may be a Logseq
+        // vault (a `.qingwu-conflicts/` dir would pollute the user's git status),
+        // and any project under it is in `observedFolders` so FSEvents would
+        // re-fire for our own write and import the backup as a brand-new note.
+        // Route every project's conflicts to Application Support instead, next
+        // to the version history, which is never registered as a project and
+        // therefore never observed.
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        let conflictsRoot = appSupport.appendingPathComponent("com.qingwu.app/Conflicts", isDirectory: true)
         do {
             try FileManager.default.createDirectory(at: conflictsRoot, withIntermediateDirectories: true)
         } catch {

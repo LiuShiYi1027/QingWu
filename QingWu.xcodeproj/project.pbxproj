@@ -105,6 +105,7 @@
 		A9484E9B356771637D57157F /* Helpers/HtmlToMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0736438569674343BEEB0299 /* Helpers/HtmlToMarkdown.swift */; };
 		EAAF710A6DC7C6BC33A032EA /* QingWuTests/HtmlToMarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51058B752985D9BF24D44FEA /* QingWuTests/HtmlToMarkdownTests.swift */; };
 		7AB1664FC5A60FE3EBF3D219 /* QingWuTests/ImportScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2BB9795EE5AC72B1423FF8 /* QingWuTests/ImportScanTests.swift */; };
+		3F9A1C2B7D4E5F608192A3B4 /* QingWuTests/LogseqVaultScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2D4E6F0A1B3C5D7E9F0A12 /* QingWuTests/LogseqVaultScanTests.swift */; };
 		5E77A0F1885D42989822E5CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E21F00885D42989822E5CC /* SettingsView.swift */; };
 		5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3B40DC2D5EDC92F599928F /* FolderListView.swift */; };
 		63F4C8DCD1C90B42E40F8C74 /* QingWuTests/StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B6B5476B1CDFF39BDE0E63 /* QingWuTests/StringExtensionsTests.swift */; };
@@ -325,6 +326,7 @@
 		0736438569674343BEEB0299 /* Helpers/HtmlToMarkdown.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Helpers/HtmlToMarkdown.swift; sourceTree = SOURCE_ROOT; };
 		51058B752985D9BF24D44FEA /* QingWuTests/HtmlToMarkdownTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QingWuTests/HtmlToMarkdownTests.swift; sourceTree = SOURCE_ROOT; };
 		0B2BB9795EE5AC72B1423FF8 /* QingWuTests/ImportScanTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QingWuTests/ImportScanTests.swift; sourceTree = SOURCE_ROOT; };
+		8C2D4E6F0A1B3C5D7E9F0A12 /* QingWuTests/LogseqVaultScanTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QingWuTests/LogseqVaultScanTests.swift; sourceTree = SOURCE_ROOT; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		8FD4E9A039653D603B5A7868 /* Helpers/Diagnostics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Helpers/Diagnostics.swift; sourceTree = SOURCE_ROOT; };
 		919F545BD00240BFACE54736 /* PreviewSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSearchBar.swift; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 				70CD1D46A31EA0A827EF0C05 /* QingWuTests/TypographyCleanerTests.swift */,
 				51058B752985D9BF24D44FEA /* QingWuTests/HtmlToMarkdownTests.swift */,
 				0B2BB9795EE5AC72B1423FF8 /* QingWuTests/ImportScanTests.swift */,
+				8C2D4E6F0A1B3C5D7E9F0A12 /* QingWuTests/LogseqVaultScanTests.swift */,
 				17D270682FE43740B52C6C24 /* QingWuTests/Info.plist */,
 			);
 			path = QingWuTests;
@@ -1027,6 +1030,7 @@
 				242C434908DBCF06A33ADC23 /* QingWuTests/TypographyCleanerTests.swift in Sources */,
 				EAAF710A6DC7C6BC33A032EA /* QingWuTests/HtmlToMarkdownTests.swift in Sources */,
 				7AB1664FC5A60FE3EBF3D219 /* QingWuTests/ImportScanTests.swift in Sources */,
+				3F9A1C2B7D4E5F608192A3B4 /* QingWuTests/LogseqVaultScanTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

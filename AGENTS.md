@@ -271,6 +271,15 @@ unless the task targets them.
   reading, mobile rendering, and target membership aligned.
 - Trash handling spans `Business/Storage.swift`, `Business/Note.swift`,
   sidebar drag/drop, attachment cleanup, and system Trash fallback.
+- Logseq vault compatibility is a product invariant: opening a Logseq vault
+  must never write into it except for user-edited notes. Vault internals stay
+  hidden via the reserved-folder list — macOS `Storage.reservedFolderNames`
+  and iOS `NoteFileStore.ignoredFolderNames` are mirrored deliberately; change
+  both in the same commit. Conflict backups live in
+  `~/Library/Application Support/com.qingwu.app/Conflicts`, never inside the
+  storage root. External-edit handling is last-write-wins with a debounced
+  recheck window (see `FileSystemEventManager.reloadNote`); a real merge is
+  planned but not implemented — treat any change there as high risk.
 - Version history lives in `Business/NoteVersionManager.swift` and
   `Controllers/VersionHistoryViewController.swift`; keep file IO off the main
   thread and UI updates on the main thread.

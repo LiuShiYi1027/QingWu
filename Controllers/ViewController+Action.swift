@@ -155,10 +155,11 @@ extension ViewController {
 
     /// Expands the open-panel selection into importable note files. Folders are
     /// scanned recursively; attachment folders (`i/`, `files/`), the in-storage
-    /// `.Trash`, and hidden entries are skipped. Symlinked directories are not
-    /// followed, which keeps the scan loop-free.
+    /// `.Trash`, Logseq vault internals (`logseq/`, `assets/`), and hidden
+    /// entries are skipped. Symlinked directories are not followed, which keeps
+    /// the scan loop-free.
     nonisolated static func collectImportableFiles(from urls: [URL], allowedExtensions: [String]) -> [URL] {
-        let skippedDirectories: Set<String> = [".Trash", "i", "files"]
+        let skippedDirectories: Set<String> = [".Trash", "i", "files", "logseq", "assets"]
         var collected: [URL] = []
         // Dedupe on the symlink-resolved path: a folder pick plus a file pick
         // inside it can yield /var vs /private/var forms of the same file.
