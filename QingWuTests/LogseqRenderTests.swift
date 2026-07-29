@@ -77,4 +77,34 @@ final class LogseqRenderTests: XCTestCase {
         XCTAssertTrue(html.contains("keep-me-verbatim"))
         XCTAssertFalse(html.contains("logseq-prop"))
     }
+
+    // MARK: - Tab-indented outlines
+
+    /// Logseq nests blocks with tabs; without expansion cmark treats the whole
+    /// outline as an indented code block.
+    func testTabIndentedOutlineRendersAsList() {
+        let markdown = "- parent\n\t- child [[Some Page]]\n\t- second child"
+        let html = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false)!
+
+        XCTAssertTrue(html.contains("<ul>"), "tab-indented outline must render as a list, got: \(html)")
+        XCTAssertTrue(html.contains("child"))
+        XCTAssertFalse(html.contains("<pre><code"))
+    }
+
+    func testTopLevelTabbedBlockRendersAsList() {
+        // Logseq demo graphs indent even top-level blocks with a tab.
+        let markdown = "## Welcome\n\t- Click on [[Project/PKM Workshop]]"
+        let html = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false)!
+
+        XCTAssertTrue(html.contains("<ul>"))
+        XCTAssertFalse(html.contains("<pre><code"))
+    }
+
+    func testTabsInsideCodeFenceArePreserved() {
+        let markdown = "```\n\t- not a list\n```"
+        let html = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false)!
+
+        XCTAssertTrue(html.contains("<pre><code"))
+        XCTAssertFalse(html.contains("<ul>"))
+    }
 }

@@ -52,6 +52,7 @@ enum MobileHtmlRenderer {
 
     private static func markdownToHTML(_ markdown: String) -> String {
         _ = ensureExtensionsRegistered
+        let markdown = expandLogseqTabIndentation(in: markdown)
         guard let parser = cmark_parser_new(CMARK_OPT_FOOTNOTES) else { return "" }
         defer { cmark_parser_free(parser) }
 
@@ -156,6 +157,37 @@ enum MobileHtmlRenderer {
     }
 
     // MARK: - Logseq flavor
+
+    /// Mirrors macOS `expandLogseqTabIndentation` in `Business/Markdown.swift` —
+    /// change both in the same commit. Logseq's tab-indented outlines would
+    /// otherwise render as indented code blocks; expand leading tabs to two
+    /// spaces outside fenced code, for rendering only.
+    private static func expandLogseqTabIndentation(in markdown: String) -> String {
+        guard markdown.contains("\t") else { return markdown }
+
+        var inFence = false
+        var output: [String] = []
+        let lines = markdown.components(separatedBy: "\n")
+        output.reserveCapacity(lines.count)
+
+        for line in lines {
+            let indentEnd = line.firstIndex(where: { $0 != " " && $0 != "\t" }) ?? line.endIndex
+            let body = line[indentEnd...]
+            if body.hasPrefix("```") || body.hasPrefix("~~~") {
+                inFence.toggle()
+                output.append(line)
+                continue
+            }
+            let indent = line[..<indentEnd]
+            if inFence || !indent.contains("\t") {
+                output.append(line)
+            } else {
+                output.append(indent.replacingOccurrences(of: "\t", with: "  ") + body)
+            }
+        }
+
+        return output.joined(separator: "\n")
+    }
 
     /// Mirrors macOS `transformLogseqFlavor` in `Business/Markdown.swift` —
     /// change both in the same commit. Task keywords become badges, `key::`

@@ -192,7 +192,7 @@ public class NotesTextProcessor {
                 .replacingOccurrences(of: "]]", with: "")
                 .trim()
 
-            guard let tag = substring.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
+            guard let tag = substring.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
             attributedString.addAttribute(.link, value: "\(tagQuery)\(tag)", range: innerRange)
         }
 

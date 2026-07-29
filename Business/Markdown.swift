@@ -10,6 +10,8 @@ extension String {
 func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
     cmark_gfm_core_extensions_ensure_registered()
 
+    let markdown = expandLogseqTabIndentation(in: markdown)
+
     guard let parser = cmark_parser_new(CMARK_OPT_FOOTNOTES) else { return nil }
     defer { cmark_parser_free(parser) }
 
@@ -50,6 +52,39 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
 }
 
 // MARK: - Logseq flavor
+
+/// Logseq writes outline indentation as tabs; cmark reads a leading tab as an
+/// indented code block, which would render an entire nested Logseq outline as
+/// verbatim code. Expand leading tabs to two spaces each — outside fenced
+/// code blocks — for rendering only; the on-disk file is never touched.
+/// Mirrored by QingWuMobile `MobileHtmlRenderer.expandLogseqTabIndentation` —
+/// change both in the same commit.
+func expandLogseqTabIndentation(in markdown: String) -> String {
+    guard markdown.contains("\t") else { return markdown }
+
+    var inFence = false
+    var output: [String] = []
+    let lines = markdown.components(separatedBy: "\n")
+    output.reserveCapacity(lines.count)
+
+    for line in lines {
+        let indentEnd = line.firstIndex(where: { $0 != " " && $0 != "\t" }) ?? line.endIndex
+        let body = line[indentEnd...]
+        if body.hasPrefix("```") || body.hasPrefix("~~~") {
+            inFence.toggle()
+            output.append(line)
+            continue
+        }
+        let indent = line[..<indentEnd]
+        if inFence || !indent.contains("\t") {
+            output.append(line)
+        } else {
+            output.append(indent.replacingOccurrences(of: "\t", with: "  ") + body)
+        }
+    }
+
+    return output.joined(separator: "\n")
+}
 
 /// Logseq task keywords rendered as status badges in preview.
 private let logseqTaskKeywords = ["TODO", "DOING", "DONE", "NOW", "LATER", "WAITING", "CANCELED"]

@@ -322,7 +322,11 @@ enum MarkdownRuleHighlighter {
 
             let appLink = attributedString.mutableString.substring(with: _range)
 
-            attributedString.addAttribute(.link, value: "qingwu://goto/" + appLink, range: _range)
+            // Encode like `copyURL` does, so titles with spaces or `/`
+            // (Logseq `[[namespace/Page]]`) survive the round trip through
+            // URL(string:) and RouteQingWuGoto's lastPathComponent lookup.
+            let encodedLink = appLink.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? appLink
+            attributedString.addAttribute(.link, value: "qingwu://goto/" + encodedLink, range: _range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.linkColor, range: _range)
             if let range = result?.range(at: 0) {
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
@@ -331,6 +335,13 @@ enum MarkdownRuleHighlighter {
             if let range = result?.range(at: 2) {
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
             }
+
+            // Compact display: collapse the `[[` / `]]` brackets when syntax
+            // hiding is on, so a wikilink reads as plain linked prose.
+            if let opening = result?.range(at: 1) {
+                hideSyntaxIfNecessary(range: opening)
+            }
+            hideSyntaxIfNecessary(range: NSRange(location: NSMaxRange(innerRange) - 2, length: 2))
         }
 
         NotesTextProcessor.blockQuoteRegex.matches(string, range: paragraphRange) { result in

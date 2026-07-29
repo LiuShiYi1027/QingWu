@@ -281,10 +281,12 @@ unless the task targets them.
   recheck window (see `FileSystemEventManager.reloadNote`); a real merge is
   planned but not implemented — treat any change there as high risk.
 - Logseq syntax rendering (`TODO` badges, `key::` property lines, hidden
-  `id::`/`collapsed::`) lives in `transformLogseqFlavor` at the end of
-  `renderMarkdownHTML` (`Business/Markdown.swift`), with a deliberate mirror
-  in `QingWuMobile/Services/MobileHtmlRenderer.swift`; change both in the
-  same commit. Styling uses `--logseq-task-color` variables in
+  `id::`/`collapsed::`, tab-indented outline expansion) lives in
+  `renderMarkdownHTML` (`Business/Markdown.swift`): `expandLogseqTabIndentation`
+  runs before cmark (render-only, fence-aware), `transformLogseqFlavor` at the
+  end. Both have deliberate mirrors in
+  `QingWuMobile/Services/MobileHtmlRenderer.swift`; change both in the same
+  commit. Styling uses `--logseq-task-color` variables in
   `typography.css` with explicit dark restatements in `theme-dark.css`;
   `mobile-reader.css` mirrors the same rules.
 - Version history lives in `Business/NoteVersionManager.swift` and
