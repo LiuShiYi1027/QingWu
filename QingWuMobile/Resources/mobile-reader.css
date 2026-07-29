@@ -463,3 +463,50 @@ a.wikilink {
 .hljs-strong {
   font-weight: 600;
 }
+
+/* Logseq flavor (task badges, block properties) — mirrors macOS typography.css */
+.logseq-task {
+  display: inline-block;
+  padding: 0 6px;
+  margin-right: 2px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  color: #ffffff;
+  background: var(--logseq-task-color, #6e7781);
+  vertical-align: 0.08em;
+}
+
+.logseq-task-todo { --logseq-task-color: #0969da; }
+.logseq-task-doing,
+.logseq-task-now { --logseq-task-color: #9a6700; }
+.logseq-task-later,
+.logseq-task-waiting { --logseq-task-color: #6e7781; }
+.logseq-task-done { --logseq-task-color: #1a7f37; }
+.logseq-task-canceled { --logseq-task-color: #8c959f; }
+
+.logseq-prop {
+  color: #6e7781;
+  font-size: 0.85em;
+}
+
+.logseq-prop-key {
+  font-weight: 600;
+}
+
+.logseq-prop-hidden {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logseq-task-todo { --logseq-task-color: #4493f8; }
+  .logseq-task-doing,
+  .logseq-task-now { --logseq-task-color: #d29922; }
+  .logseq-task-later,
+  .logseq-task-waiting { --logseq-task-color: #8b949e; }
+  .logseq-task-done { --logseq-task-color: #3fb950; }
+  .logseq-task-canceled { --logseq-task-color: #6e7681; }
+  .logseq-prop { color: #8b949e; }
+}

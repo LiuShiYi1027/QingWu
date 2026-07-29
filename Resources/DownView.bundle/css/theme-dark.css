@@ -84,6 +84,38 @@
   color: var(--alert-color);
 }
 
+/* Logseq flavor dark overrides */
+.darkmode .heti .logseq-task-todo {
+  --logseq-task-color: #4493f8;
+}
+
+.darkmode .heti .logseq-task-doing,
+.darkmode .heti .logseq-task-now {
+  --logseq-task-color: #d29922;
+}
+
+.darkmode .heti .logseq-task-later,
+.darkmode .heti .logseq-task-waiting {
+  --logseq-task-color: #8b949e;
+}
+
+.darkmode .heti .logseq-task-done {
+  --logseq-task-color: #3fb950;
+}
+
+.darkmode .heti .logseq-task-canceled {
+  --logseq-task-color: #6e7681;
+}
+
+.darkmode .heti .logseq-task {
+  color: #ffffff;
+  background: var(--logseq-task-color, #8b949e);
+}
+
+.darkmode .heti .logseq-prop {
+  color: #8b949e;
+}
+
 .darkmode .heti hr {
   background-color: var(--border-color);
 }

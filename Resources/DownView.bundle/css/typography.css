@@ -323,6 +323,56 @@ blockquote blockquote {
   --alert-color: #cf222e;
 }
 
+/* Logseq flavor (task badges, block properties) */
+.heti .logseq-task {
+  display: inline-block;
+  padding: 0 6px;
+  margin-right: 2px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  color: #ffffff;
+  background: var(--logseq-task-color, #6e7781);
+  vertical-align: 0.08em;
+}
+
+.heti .logseq-task-todo {
+  --logseq-task-color: #0969da;
+}
+
+.heti .logseq-task-doing,
+.heti .logseq-task-now {
+  --logseq-task-color: #9a6700;
+}
+
+.heti .logseq-task-later,
+.heti .logseq-task-waiting {
+  --logseq-task-color: #6e7781;
+}
+
+.heti .logseq-task-done {
+  --logseq-task-color: #1a7f37;
+}
+
+.heti .logseq-task-canceled {
+  --logseq-task-color: #8c959f;
+}
+
+.heti .logseq-prop {
+  color: #6e7781;
+  font-size: 0.85em;
+}
+
+.heti .logseq-prop-key {
+  font-weight: 600;
+}
+
+.heti .logseq-prop-hidden {
+  display: none;
+}
+
 /* Tables */
 .heti table {
   box-sizing: border-box;

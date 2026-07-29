@@ -15,7 +15,8 @@ enum MobileHtmlRenderer {
         // lines at the top of every note that carries one.
         let cleanedMarkdown = String(stripFrontmatter(markdown))
         let body = rewriteWikilinks(
-            in: rewriteLocalAssetPaths(in: markdownToHTML(cleanedMarkdown), assetRoot: assetRoot))
+            in: transformLogseqFlavor(
+                in: rewriteLocalAssetPaths(in: markdownToHTML(cleanedMarkdown), assetRoot: assetRoot)))
         let hero = heroTitleHTML(noteTitle: title, markdown: cleanedMarkdown)
         let scripts = readerScripts(for: body)
         // Critical: the dynamic --font-size / --font overrides MUST come
@@ -152,6 +153,82 @@ enum MobileHtmlRenderer {
                 with: "<a class=\"wikilink\" href=\"\(escapeHTML(href))\">\(label)</a>")
         }
         return mutable as String
+    }
+
+    // MARK: - Logseq flavor
+
+    /// Mirrors macOS `transformLogseqFlavor` in `Business/Markdown.swift` —
+    /// change both in the same commit. Task keywords become badges, `key::`
+    /// properties become muted lines, reading-mode-hidden keys are dropped.
+    private static let logseqHiddenPropertyKeys: Set<String> = ["id", "collapsed"]
+
+    private static let logseqTaskRegex = try? NSRegularExpression(
+        pattern: #"(<li[^>]*>\s*(?:<p[^>]*>)?)\s*(TODO|DOING|DONE|NOW|LATER|WAITING|CANCELED)(?=[\s<])"#)
+
+    private static let logseqPropertyRegex = try? NSRegularExpression(
+        pattern: #"(<p[^>]*>|<br\s*/?>)\s*([A-Za-z][\w.-]*)::[ \t]*([^\n<]*)"#)
+
+    private static func transformLogseqFlavor(in html: String) -> String {
+        guard html.contains("::") || html.contains("<li"), let codeRegex = codeRegionPattern else { return html }
+        let source = html as NSString
+        let codeRanges = codeRegex.matches(in: html, range: NSRange(location: 0, length: source.length)).map(\.range)
+
+        var result = ""
+        result.reserveCapacity(html.count)
+        var cursor = 0
+        for codeRange in codeRanges {
+            if codeRange.location > cursor {
+                let prose = source.substring(with: NSRange(location: cursor, length: codeRange.location - cursor))
+                result += transformLogseqSegment(prose)
+            }
+            result += source.substring(with: codeRange)
+            cursor = codeRange.location + codeRange.length
+        }
+        if cursor < source.length {
+            result += transformLogseqSegment(source.substring(from: cursor))
+        }
+
+        var cleaned = result.replacingOccurrences(
+            of: #"<span class="logseq-prop-hidden"></span>(<br\s*/?>)?"#,
+            with: "",
+            options: .regularExpression)
+        cleaned = cleaned.replacingOccurrences(
+            of: #"<p[^>]*>\s*</p>"#,
+            with: "",
+            options: .regularExpression)
+        return cleaned
+    }
+
+    private static func transformLogseqSegment(_ segment: String) -> String {
+        let result = NSMutableString(string: segment)
+
+        if segment.contains("<li"), let regex = logseqTaskRegex {
+            let matches = regex.matches(in: segment, range: NSRange(location: 0, length: result.length))
+            for match in matches.reversed() {
+                let opener = result.substring(with: match.range(at: 1))
+                let keyword = result.substring(with: match.range(at: 2))
+                let badge = "<span class=\"logseq-task logseq-task-\(keyword.lowercased())\">\(keyword)</span> "
+                result.replaceCharacters(in: match.range, with: "\(opener)\(badge)")
+            }
+        }
+
+        if segment.contains("::"), let regex = logseqPropertyRegex {
+            let current = result as String
+            let matches = regex.matches(in: current, range: NSRange(location: 0, length: result.length))
+            for match in matches.reversed() {
+                let opener = result.substring(with: match.range(at: 1))
+                let key = result.substring(with: match.range(at: 2))
+                if logseqHiddenPropertyKeys.contains(key) {
+                    result.replaceCharacters(in: match.range, with: "\(opener)<span class=\"logseq-prop-hidden\"></span>")
+                } else {
+                    let value = result.substring(with: match.range(at: 3))
+                    let line = "<span class=\"logseq-prop\"><span class=\"logseq-prop-key\">\(key)</span> :: <span class=\"logseq-prop-value\">\(value)</span></span>"
+                    result.replaceCharacters(in: match.range, with: "\(opener)\(line)")
+                }
+            }
+        }
+
+        return result as String
     }
 
     private static func unescapeHTML(_ s: String) -> String {

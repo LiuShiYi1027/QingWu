@@ -46,7 +46,115 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
     }
 
-    return transformGitHubAlerts(in: newRes)
+    return transformLogseqFlavor(in: transformGitHubAlerts(in: newRes))
+}
+
+// MARK: - Logseq flavor
+
+/// Logseq task keywords rendered as status badges in preview.
+private let logseqTaskKeywords = ["TODO", "DOING", "DONE", "NOW", "LATER", "WAITING", "CANCELED"]
+
+/// Block properties Logseq itself hides in reading mode; dropped from preview.
+private let logseqHiddenPropertyKeys: Set<String> = ["id", "collapsed"]
+
+private let logseqCodeRegionRegex: NSRegularExpression = {
+    do {
+        return try NSRegularExpression(pattern: "<pre[\\s\\S]*?</pre>|<code[\\s\\S]*?</code>", options: [.caseInsensitive])
+    } catch {
+        preconditionFailure("logseqCodeRegionRegex literal is invalid: \(error)")
+    }
+}()
+
+private let logseqTaskRegex: NSRegularExpression = {
+    do {
+        return try NSRegularExpression(
+            pattern: #"(<li[^>]*>\s*(?:<p[^>]*>)?)\s*(TODO|DOING|DONE|NOW|LATER|WAITING|CANCELED)(?=[\s<])"#, options: [])
+    } catch {
+        preconditionFailure("logseqTaskRegex literal is invalid: \(error)")
+    }
+}()
+
+private let logseqPropertyRegex: NSRegularExpression = {
+    do {
+        return try NSRegularExpression(
+            pattern: #"(<p[^>]*>|<br\s*/?>)\s*([A-Za-z][\w.-]*)::[ \t]*([^\n<]*)"#, options: [])
+    } catch {
+        preconditionFailure("logseqPropertyRegex literal is invalid: \(error)")
+    }
+}()
+
+/// Renders Logseq-flavored constructs in cmark output: `TODO`-family task
+/// markers become status badges, `key:: value` block properties become muted
+/// property lines, and reading-mode-hidden properties (`id::`, `collapsed::`)
+/// are dropped. Code regions are skipped so fenced/inline code stays verbatim.
+/// Mirrored by QingWuMobile `MobileHtmlRenderer.transformLogseqFlavor` —
+/// change both in the same commit.
+func transformLogseqFlavor(in html: String) -> String {
+    guard html.contains("::") || html.contains("<li") else { return html }
+
+    let source = html as NSString
+    let fullRange = NSRange(location: 0, length: source.length)
+    let codeRanges = logseqCodeRegionRegex.matches(in: html, options: [], range: fullRange).map(\.range)
+
+    var result = ""
+    result.reserveCapacity(html.count)
+    var cursor = 0
+    for codeRange in codeRanges {
+        if codeRange.location > cursor {
+            let prose = source.substring(with: NSRange(location: cursor, length: codeRange.location - cursor))
+            result += transformLogseqSegment(prose)
+        }
+        result += source.substring(with: codeRange)
+        cursor = codeRange.location + codeRange.length
+    }
+    if cursor < source.length {
+        result += transformLogseqSegment(source.substring(from: cursor))
+    }
+
+    // Hidden properties leave marker spans behind; drop them along with their
+    // line break, then drop paragraphs that became empty as a result.
+    var cleaned = result.replacingOccurrences(
+        of: #"<span class="logseq-prop-hidden"></span>(<br\s*/?>)?"#,
+        with: "",
+        options: .regularExpression)
+    cleaned = cleaned.replacingOccurrences(
+        of: #"<p[^>]*>\s*</p>"#,
+        with: "",
+        options: .regularExpression)
+    return cleaned
+}
+
+private func transformLogseqSegment(_ segment: String) -> String {
+    let result = NSMutableString(string: segment)
+
+    if segment.contains("<li") {
+        let matches = logseqTaskRegex.matches(in: segment, options: [], range: NSRange(location: 0, length: result.length))
+        for match in matches.reversed() {
+            let opener = result.substring(with: match.range(at: 1))
+            let keyword = result.substring(with: match.range(at: 2))
+            guard logseqTaskKeywords.contains(keyword) else { continue }
+            let badge = "<span class=\"logseq-task logseq-task-\(keyword.lowercased())\">\(keyword)</span> "
+            result.replaceCharacters(in: match.range, with: "\(opener)\(badge)")
+        }
+    }
+
+    if segment.contains("::") {
+        let current = result as String
+        let matches = logseqPropertyRegex.matches(in: current, options: [], range: NSRange(location: 0, length: result.length))
+        for match in matches.reversed() {
+            let opener = result.substring(with: match.range(at: 1))
+            let key = result.substring(with: match.range(at: 2))
+            if logseqHiddenPropertyKeys.contains(key) {
+                result.replaceCharacters(in: match.range, with: "\(opener)<span class=\"logseq-prop-hidden\"></span>")
+            } else {
+                let value = result.substring(with: match.range(at: 3))
+                let line = "<span class=\"logseq-prop\"><span class=\"logseq-prop-key\">\(key)</span> :: <span class=\"logseq-prop-value\">\(value)</span></span>"
+                result.replaceCharacters(in: match.range, with: "\(opener)\(line)")
+            }
+        }
+    }
+
+    return result as String
 }
 
 // MARK: - GitHub Alerts
