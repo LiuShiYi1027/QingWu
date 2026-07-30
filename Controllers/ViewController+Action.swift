@@ -871,7 +871,10 @@ extension ViewController {
     /// `journals/` folder gets one created on demand; it turns into a normal
     /// sidebar project on the next storage rescan.
     @IBAction func openDailyNote(_ sender: NSMenuItem) {
-        openTodaysJournal()
+        // Menu actions target a storyboard-level ViewController whose outlets
+        // are nil; forward to the real wired instance like fileMenuNewNote does.
+        guard let vc = ViewController.shared() else { return }
+        vc.openTodaysJournal()
     }
 
     /// Logseq-compatible journal file name: `yyyy_MM_dd` (no extension).

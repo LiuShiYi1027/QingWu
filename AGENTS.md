@@ -208,7 +208,11 @@ string is the only breadcrumb the maintainer has when triaging.
 - Storyboard bindings (`@IBOutlet`/`@IBAction` on `ViewController`, cell
   identifiers `NoteCellView` / `DataCell`, First Responder selectors) break
   at runtime without compile errors if renamed. See `ARCHITECTURE.md`
-  "Storyboard Anchors" before moving any of these.
+  "Storyboard Anchors" before moving any of these. Main-menu actions target
+  a storyboard-level `ViewController` object whose outlets are nil — new
+  menu items must forward to the real wired instance via
+  `ViewController.shared()` (the `fileMenuNewNote` pattern), never call
+  logic on `self` directly, or the app traps on the first outlet touch.
 
 ## Security Considerations
 
