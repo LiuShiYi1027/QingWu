@@ -1,38 +1,38 @@
 {
-  "fill" : {
-    "solid" : "display-p3:0.99512,0.99512,0.99512,1.00000"
+  "fill": {
+    "solid": "display-p3:0.94902,0.98431,0.95294,1.00000"
   },
-  "groups" : [
+  "groups": [
     {
-      "layers" : [
+      "layers": [
         {
-          "glass" : false,
-          "hidden" : false,
-          "image-name" : "43.png",
-          "name" : "43",
-          "position" : {
-            "scale" : 0.4,
-            "translation-in-points" : [
+          "glass": false,
+          "hidden": false,
+          "image-name": "leaf.png",
+          "name": "leaf",
+          "position": {
+            "scale": 0.4,
+            "translation-in-points": [
               0,
               0
             ]
           }
         }
       ],
-      "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
       },
-      "translucency" : {
-        "enabled" : true,
-        "value" : 0.5
+      "translucency": {
+        "enabled": true,
+        "value": 0.5
       }
     }
   ],
-  "supported-platforms" : {
-    "circles" : [
+  "supported-platforms": {
+    "circles": [
       "watchOS"
     ],
-    "squares" : "shared"
+    "squares": "shared"
   }
 }
