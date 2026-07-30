@@ -77,4 +77,61 @@ final class WikilinkIndexTests: XCTestCase {
 
         XCTAssertEqual(index.getOutlinks(for: "A"), ["B"])
     }
+
+    // MARK: - Logseq-style targets
+
+    func testAliasIndexesUnderTarget() {
+        resetIndex()
+        index.updateNote(title: "A", content: "see [[B|pretty label]]")
+
+        XCTAssertEqual(index.getOutlinks(for: "A"), ["B"])
+    }
+
+    func testCanonicalTargetStripsAliasAndWhitespace() {
+        XCTAssertEqual(WikilinkIndex.canonicalTarget("namespace/Page|label"), "namespace/Page")
+        XCTAssertEqual(WikilinkIndex.canonicalTarget("  My Page  "), "My Page")
+        XCTAssertEqual(WikilinkIndex.canonicalTarget("Plain"), "Plain")
+    }
+
+    func testTitleCandidatesEncodeLogseqNamespace() {
+        XCTAssertEqual(WikilinkIndex.titleCandidates(for: "Plain"), ["Plain"])
+        XCTAssertEqual(
+            WikilinkIndex.titleCandidates(for: "namespace/Sub Page"),
+            ["namespace/Sub Page", "namespace___Sub Page"])
+    }
+
+    func testResolveAllMatchesCaseInsensitively() throws {
+        let note = try makeTitledNote("My Page")
+        let matches = WikilinkIndex.resolveAll("my page", in: [note])
+
+        XCTAssertEqual(matches.count, 1)
+        XCTAssertTrue(matches[0] === note)
+    }
+
+    func testResolveAllPrefersExactCase() throws {
+        let lower = try makeTitledNote("my page")
+        let upper = try makeTitledNote("My Page")
+        let matches = WikilinkIndex.resolveAll("My Page", in: [lower, upper])
+
+        XCTAssertTrue(matches.first === upper)
+    }
+
+    func testResolveAllMapsLogseqNamespaceFilename() throws {
+        // Logseq stores [[work/Plans]] as work___Plans.md on disk.
+        let note = try makeTitledNote("work___Plans")
+        let matches = WikilinkIndex.resolveAll("work/Plans", in: [note])
+
+        XCTAssertEqual(matches.count, 1)
+        XCTAssertTrue(matches[0] === note)
+    }
+
+    private func makeTitledNote(_ title: String) throws -> Note {
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("QingWuWikilinkTests-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let project = Project(url: dir, label: "test")
+        let note = Note(url: dir.appendingPathComponent("\(title).md"), with: project)
+        note.title = title
+        return note
+    }
 }

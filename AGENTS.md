@@ -289,6 +289,14 @@ unless the task targets them.
   commit. Styling uses `--logseq-task-color` variables in
   `typography.css` with explicit dark restatements in `theme-dark.css`;
   `mobile-reader.css` mirrors the same rules.
+- Logseq wikilink targets resolve through `WikilinkIndex.canonicalTarget` /
+  `titleCandidates` / `resolveAll` (`Business/WikilinkIndex.swift`): alias
+  stripping, case-insensitive matching, and `namespace/Page` ↔
+  `namespace___Page` filename mapping. `RouteQingWuGoto` consumes it on
+  macOS; iOS mirrors `titleCandidates` in `NoteFileStore` (`FileReader.swift`).
+  Change both platforms in the same commit. QingWu keeps its own `:`
+  filename convention for newly created notes — the Logseq encodings are
+  read-only compatibility.
 - Version history lives in `Business/NoteVersionManager.swift` and
   `Controllers/VersionHistoryViewController.swift`; keep file IO off the main
   thread and UI updates on the main thread.

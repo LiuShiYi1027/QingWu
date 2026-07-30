@@ -132,7 +132,9 @@ extension AppDelegate {
     func RouteQingWuGoto(_ url: URL) {
         let query = url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent
         guard let vc = ViewController.shared() else { return }
-        let notes = vc.storage.noteList.filter { $0.title == query }
+        // Logseq-aware resolution: strips |alias, matches case-insensitively,
+        // and maps `namespace/Page` to Logseq's `namespace___Page` filenames.
+        let notes = WikilinkIndex.resolveAll(query, in: vc.storage.noteList)
         if notes.count > 1 {
             vc.updateTable {
                 DispatchQueue.main.async {

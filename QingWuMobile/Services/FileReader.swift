@@ -641,21 +641,44 @@ enum NoteFileStore {
         }.value
     }
 
+    /// Title forms a Logseq-style target may correspond to on disk.
+    /// Mirrors macOS `WikilinkIndex.titleCandidates` — change both in the
+    /// same commit. The last-path-component fallback keeps loose
+    /// `[[folder/name]]` links working.
+    static func titleCandidates(for rawTitle: String) -> [String] {
+        let aliasStripped = rawTitle.components(separatedBy: "|").first ?? rawTitle
+        let verbatim = aliasStripped.trimmingCharacters(in: .whitespaces)
+        var candidates = [verbatim]
+        let logseqNamespace = verbatim.replacingOccurrences(of: "/", with: "___")
+        if logseqNamespace != verbatim {
+            candidates.append(logseqNamespace)
+        }
+        let lastComponent = (verbatim as NSString).lastPathComponent
+        if lastComponent != verbatim {
+            candidates.append(lastComponent)
+        }
+        return candidates
+    }
+
     /// Locate a note by wikilink target anywhere in the library.
-    /// `[[folder/name]]` matches on the last path component, mirroring the
-    /// macOS resolver's title-based lookup.
+    /// Matches Logseq-style targets: `[[namespace/Page]]` resolves against
+    /// both `namespace/Page`-style titles and Logseq's `namespace___Page`
+    /// filenames, case- and diacritic-insensitively.
     static func findNote(titled rawTitle: String, in root: URL) async -> NoteFile? {
-        let title = (rawTitle as NSString).lastPathComponent
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !title.isEmpty else { return nil }
+        let candidates = titleCandidates(for: rawTitle).filter { !$0.isEmpty }
+        guard !candidates.isEmpty else { return nil }
         let cloudURLs = await CloudSyncManager.shared.cloudNoteURLs(under: root)
         return await Task.detached(priority: .userInitiated) { () -> NoteFile? in
             let urls = cloudURLs.isEmpty ? recursiveNoteURLsSync(in: root) : cloudURLs
-            let match = urls.first {
-                $0.deletingPathExtension().lastPathComponent
-                    .compare(title, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+            for candidate in candidates {
+                if let match = urls.first(where: {
+                    $0.deletingPathExtension().lastPathComponent
+                        .compare(candidate, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+                }) {
+                    return NoteFile(url: match)
+                }
             }
-            return match.map { NoteFile(url: $0) }
+            return nil
         }.value
     }
 
