@@ -9,33 +9,45 @@ ctx.clear(CGRect(x: 0, y: 0, width: size, height: size))
 
 // Stylized wutong (parasol tree) leaf, y-up. 3 lobes with real notches.
 let leaf = CGMutablePath()
-leaf.move(to: CGPoint(x: 1024, y: 1700))                       // center tip
-leaf.addCurve(to: CGPoint(x: 1120, y: 1440),
-              control1: CGPoint(x: 1080, y: 1610), control2: CGPoint(x: 1108, y: 1520))
-leaf.addCurve(to: CGPoint(x: 1108, y: 1240),
-              control1: CGPoint(x: 1130, y: 1370), control2: CGPoint(x: 1116, y: 1300))
+leaf.move(to: CGPoint(x: 1024, y: 1700))  // center tip
+leaf.addCurve(
+    to: CGPoint(x: 1120, y: 1440),
+    control1: CGPoint(x: 1080, y: 1610), control2: CGPoint(x: 1108, y: 1520))
+leaf.addCurve(
+    to: CGPoint(x: 1108, y: 1240),
+    control1: CGPoint(x: 1130, y: 1370), control2: CGPoint(x: 1116, y: 1300))
 // notch -> side-lobe tip pointing up-out (maple gesture)
-leaf.addCurve(to: CGPoint(x: 1450, y: 1370),
-              control1: CGPoint(x: 1170, y: 1220), control2: CGPoint(x: 1340, y: 1400))
-leaf.addCurve(to: CGPoint(x: 1330, y: 1000),
-              control1: CGPoint(x: 1500, y: 1290), control2: CGPoint(x: 1390, y: 1120))
-leaf.addCurve(to: CGPoint(x: 1150, y: 800),
-              control1: CGPoint(x: 1290, y: 910), control2: CGPoint(x: 1200, y: 850))
-leaf.addCurve(to: CGPoint(x: 1024, y: 640),
-              control1: CGPoint(x: 1096, y: 735), control2: CGPoint(x: 1050, y: 678))
+leaf.addCurve(
+    to: CGPoint(x: 1450, y: 1370),
+    control1: CGPoint(x: 1170, y: 1220), control2: CGPoint(x: 1340, y: 1400))
+leaf.addCurve(
+    to: CGPoint(x: 1330, y: 1000),
+    control1: CGPoint(x: 1500, y: 1290), control2: CGPoint(x: 1390, y: 1120))
+leaf.addCurve(
+    to: CGPoint(x: 1150, y: 800),
+    control1: CGPoint(x: 1290, y: 910), control2: CGPoint(x: 1200, y: 850))
+leaf.addCurve(
+    to: CGPoint(x: 1024, y: 640),
+    control1: CGPoint(x: 1096, y: 735), control2: CGPoint(x: 1050, y: 678))
 // mirror left
-leaf.addCurve(to: CGPoint(x: 898, y: 800),
-              control1: CGPoint(x: 998, y: 678), control2: CGPoint(x: 952, y: 735))
-leaf.addCurve(to: CGPoint(x: 718, y: 1000),
-              control1: CGPoint(x: 848, y: 850), control2: CGPoint(x: 758, y: 910))
-leaf.addCurve(to: CGPoint(x: 598, y: 1370),
-              control1: CGPoint(x: 658, y: 1120), control2: CGPoint(x: 548, y: 1290))
-leaf.addCurve(to: CGPoint(x: 940, y: 1240),
-              control1: CGPoint(x: 708, y: 1400), control2: CGPoint(x: 878, y: 1220))
-leaf.addCurve(to: CGPoint(x: 928, y: 1440),
-              control1: CGPoint(x: 932, y: 1300), control2: CGPoint(x: 918, y: 1370))
-leaf.addCurve(to: CGPoint(x: 1024, y: 1700),
-              control1: CGPoint(x: 940, y: 1520), control2: CGPoint(x: 968, y: 1610))
+leaf.addCurve(
+    to: CGPoint(x: 898, y: 800),
+    control1: CGPoint(x: 998, y: 678), control2: CGPoint(x: 952, y: 735))
+leaf.addCurve(
+    to: CGPoint(x: 718, y: 1000),
+    control1: CGPoint(x: 848, y: 850), control2: CGPoint(x: 758, y: 910))
+leaf.addCurve(
+    to: CGPoint(x: 598, y: 1370),
+    control1: CGPoint(x: 658, y: 1120), control2: CGPoint(x: 548, y: 1290))
+leaf.addCurve(
+    to: CGPoint(x: 940, y: 1240),
+    control1: CGPoint(x: 708, y: 1400), control2: CGPoint(x: 878, y: 1220))
+leaf.addCurve(
+    to: CGPoint(x: 928, y: 1440),
+    control1: CGPoint(x: 932, y: 1300), control2: CGPoint(x: 918, y: 1370))
+leaf.addCurve(
+    to: CGPoint(x: 1024, y: 1700),
+    control1: CGPoint(x: 940, y: 1520), control2: CGPoint(x: 968, y: 1610))
 leaf.closeSubpath()
 
 let colorSpace = CGColorSpace(name: CGColorSpace.displayP3) ?? CGColorSpaceCreateDeviceRGB()
@@ -46,10 +58,11 @@ let gradient = CGGradient(colorsSpace: colorSpace, colors: [topColor, bottomColo
 ctx.saveGState()
 ctx.addPath(leaf)
 ctx.clip()
-ctx.drawLinearGradient(gradient,
-                       start: CGPoint(x: 1024, y: 1700),
-                       end: CGPoint(x: 1024, y: 560),
-                       options: [])
+ctx.drawLinearGradient(
+    gradient,
+    start: CGPoint(x: 1024, y: 1700),
+    end: CGPoint(x: 1024, y: 560),
+    options: [])
 ctx.restoreGState()
 
 // Stem
