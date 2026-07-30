@@ -14,6 +14,10 @@ QingWu is forked from [MiaoYan](https://github.com/tw93/MiaoYan) by Tw93 (MIT Li
 - **Fast**: Swift 6 native, better performance than Electron-based apps
 - **Simple**: Lightweight, version history, keyboard shortcuts, auto-formatting
 
+## For Logseq users
+
+QingWu gives Logseq graphs first-class read support: open your graph and go — task badges, property folding, outline rendering, wikilink navigation, block-ref expansion, and Today's Journal (⌘⇧D). It **never writes inside your vault**. See the full [Logseq compatibility notes](docs/LOGSEQ_COMPATIBILITY_EN.md) ([中文](docs/LOGSEQ_COMPATIBILITY.md)) for what's supported, what isn't, and the write policy.
+
 ## Installation
 
 **GitHub Releases**: download the latest DMG from [GitHub Releases](https://github.com/liushiyi1027/QingWu/releases/latest) (macOS 11.5+)

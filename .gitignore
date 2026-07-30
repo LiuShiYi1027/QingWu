@@ -95,7 +95,9 @@ package-lock.json
 appcast.xml
 
 # Documentation & Demo files
-docs/
+docs/*
+!docs/LOGSEQ_COMPATIBILITY.md
+!docs/LOGSEQ_COMPATIBILITY_EN.md
 index.html
 Resources/DownView.bundle/demo.html
 

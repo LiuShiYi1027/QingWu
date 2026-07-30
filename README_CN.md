@@ -14,6 +14,10 @@
 - **快**：Swift 6 原生开发、相比 Web 套壳性能体验更好
 - **简**：轻量纯粹、版本历史、众多快捷键、自动排版
 
+## Logseq 用户
+
+青梧对 Logseq 库做一等支持：直接打开你的 graph 就能读——任务徽章、属性折叠、大纲渲染、wikilink 跳转、块引用展开、今日笔记（⌘⇧D），并且**绝不写入库内文件**。支持什么、不支持什么、写入约定，详见《[Logseq 兼容性说明](docs/LOGSEQ_COMPATIBILITY.md)》（[English](docs/LOGSEQ_COMPATIBILITY_EN.md)）。
+
 ## 安装使用
 
 **GitHub Releases**: 从 [GitHub Releases](https://github.com/liushiyi1027/QingWu/releases/latest) 下载最新 DMG(macOS 11.5+)
