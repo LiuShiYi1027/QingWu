@@ -134,4 +134,42 @@ final class WikilinkIndexTests: XCTestCase {
         note.title = title
         return note
     }
+
+    // MARK: - Block refs
+
+    func testExtractBlocksFindsOwningBlock() {
+        let content = "- TODO Write the release notes\n  id:: 6651e4f2-9a2b\n  collapsed:: true\n- Other block"
+        let blocks = WikilinkIndex.extractBlocks(from: content)
+
+        XCTAssertEqual(blocks["6651e4f2-9a2b"], "TODO Write the release notes")
+    }
+
+    func testExtractBlocksSkipsPropertyOnlyContext() {
+        // No owning block above the id → no entry.
+        let blocks = WikilinkIndex.extractBlocks(from: "id:: orphan-1234")
+        XCTAssertTrue(blocks.isEmpty)
+    }
+
+    func testResolveBlockAfterUpdateNote() {
+        resetIndex()
+        index.updateNote(title: "A", content: "- Ship it\n  id:: abc-def-123")
+
+        XCTAssertEqual(index.resolveBlock("abc-def-123"), "Ship it")
+    }
+
+    func testUpdateNoteReplacesOldBlocks() {
+        resetIndex()
+        index.updateNote(title: "A", content: "- Old\n  id:: abc-def-123")
+        index.updateNote(title: "A", content: "- New content without ids")
+
+        XCTAssertNil(index.resolveBlock("abc-def-123"))
+    }
+
+    func testRemoveNoteClearsBlocks() {
+        resetIndex()
+        index.updateNote(title: "A", content: "- Ship it\n  id:: abc-def-123")
+        index.removeNote(title: "A")
+
+        XCTAssertNil(index.resolveBlock("abc-def-123"))
+    }
 }

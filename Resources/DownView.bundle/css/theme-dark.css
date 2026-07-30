@@ -116,6 +116,11 @@
   color: #8b949e;
 }
 
+.darkmode .heti .logseq-blockref {
+  background: rgba(68, 147, 248, 0.15);
+  border-bottom: 1px dashed #4493f8;
+}
+
 .darkmode .heti hr {
   background-color: var(--border-color);
 }

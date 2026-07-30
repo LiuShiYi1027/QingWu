@@ -510,3 +510,17 @@ a.wikilink {
   .logseq-task-canceled { --logseq-task-color: #6e7681; }
   .logseq-prop { color: #8b949e; }
 }
+
+.logseq-blockref {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: rgba(9, 105, 218, 0.08);
+  border-bottom: 1px dashed #0969da;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logseq-blockref {
+    background: rgba(68, 147, 248, 0.15);
+    border-bottom: 1px dashed #4493f8;
+  }
+}

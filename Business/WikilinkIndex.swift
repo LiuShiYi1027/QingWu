@@ -7,11 +7,17 @@ final class WikilinkIndex: ObservableObject {
     private var outlinks: [String: Set<String>] = [:]
     private var inlinks: [String: Set<String>] = [:]
 
+    /// Logseq block refs: `id:: <uuid>` property → owning block's first line.
+    private var blockIndex: [String: String] = [:]
+    private var noteBlocks: [String: Set<String>] = [:]
+
     private init() {}
 
     func rebuild(notes: [Note]) {
         outlinks.removeAll()
         inlinks.removeAll()
+        blockIndex.removeAll()
+        noteBlocks.removeAll()
 
         for note in notes {
             let title = note.title
@@ -22,6 +28,8 @@ final class WikilinkIndex: ObservableObject {
             for target in links {
                 inlinks[target, default: []].insert(title)
             }
+
+            indexBlocks(from: note.content.string, title: title)
         }
     }
 
@@ -69,6 +77,73 @@ final class WikilinkIndex: ObservableObject {
         for target in links {
             inlinks[target, default: []].insert(title)
         }
+
+        if let oldUUIDs = noteBlocks[title] {
+            for uuid in oldUUIDs {
+                blockIndex.removeValue(forKey: uuid)
+            }
+        }
+        indexBlocks(from: content, title: title)
+    }
+
+    // MARK: - Block refs
+
+    private static let blockIDRegex: NSRegularExpression? = try? NSRegularExpression(
+        pattern: #"(?m)^[ \t]*id::[ \t]*([0-9a-fA-F-]{8,})[ \t]*$"#)
+    private static let propertyLineRegex: NSRegularExpression? = try? NSRegularExpression(
+        pattern: #"^[ \t]*[A-Za-z][\w.-]*::"#)
+
+    /// The block owning an `id::` property is the nearest previous non-empty,
+    /// non-property line; its first line (list marker stripped) is the embed text.
+    static func extractBlocks(from content: String) -> [String: String] {
+        guard let idRegex = blockIDRegex, let propRegex = propertyLineRegex else { return [:] }
+        let lines = content.components(separatedBy: "\n")
+        var blocks: [String: String] = [:]
+
+        for (index, line) in lines.enumerated() {
+            let nsLine = line as NSString
+            guard let match = idRegex.firstMatch(in: line, range: NSRange(location: 0, length: nsLine.length)),
+                let uuidRange = Range(match.range(at: 1), in: line)
+            else { continue }
+            let uuid = String(line[uuidRange])
+
+            for prev in stride(from: index - 1, through: 0, by: -1) {
+                let candidate = lines[prev]
+                let trimmed = candidate.trimmingCharacters(in: .whitespaces)
+                if trimmed.isEmpty { continue }
+                let nsCandidate = candidate as NSString
+                if propRegex.firstMatch(in: candidate, range: NSRange(location: 0, length: nsCandidate.length)) != nil {
+                    continue
+                }
+                var text = trimmed
+                if text.hasPrefix("- ") {
+                    text = String(text.dropFirst(2)).trimmingCharacters(in: .whitespaces)
+                }
+                blocks[uuid] = text
+                break
+            }
+        }
+
+        return blocks
+    }
+
+    private func indexBlocks(from content: String, title: String) {
+        let blocks = Self.extractBlocks(from: content)
+        noteBlocks[title] = Set(blocks.keys)
+        for (uuid, text) in blocks {
+            blockIndex[uuid] = text
+        }
+    }
+
+    /// Embed text for a `((uuid))` block ref, nil when the id is unknown.
+    func resolveBlock(_ uuid: String) -> String? {
+        blockIndex[uuid]
+    }
+
+    /// Value snapshot of the block-ref map, safe to capture into the
+    /// background `Task.detached` rendering paths.
+    func blockIndexSnapshot() -> [String: String] {
+        blockIndex
     }
 
     func removeNote(title: String) {
@@ -79,6 +154,11 @@ final class WikilinkIndex: ObservableObject {
         }
         outlinks.removeValue(forKey: title)
         inlinks.removeValue(forKey: title)
+        if let uuids = noteBlocks.removeValue(forKey: title) {
+            for uuid in uuids {
+                blockIndex.removeValue(forKey: uuid)
+            }
+        }
     }
 
     // MARK: - Logseq-style target resolution

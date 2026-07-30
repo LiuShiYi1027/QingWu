@@ -7,7 +7,7 @@ extension String {
     }
 }
 
-func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
+func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool, blockResolver: ((String) -> String?)? = nil) -> String? {
     cmark_gfm_core_extensions_ensure_registered()
 
     let markdown = expandLogseqTabIndentation(in: markdown)
@@ -48,7 +48,7 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
     }
 
-    return transformLogseqFlavor(in: transformGitHubAlerts(in: newRes))
+    return transformLogseqFlavor(in: transformGitHubAlerts(in: newRes), blockResolver: blockResolver)
 }
 
 // MARK: - Logseq flavor
@@ -118,14 +118,24 @@ private let logseqPropertyRegex: NSRegularExpression = {
     }
 }()
 
+private let logseqBlockRefRegex: NSRegularExpression = {
+    do {
+        return try NSRegularExpression(pattern: #"\(\(([0-9a-fA-F-]{8,})\)\)"#, options: [])
+    } catch {
+        preconditionFailure("logseqBlockRefRegex literal is invalid: \(error)")
+    }
+}()
+
 /// Renders Logseq-flavored constructs in cmark output: `TODO`-family task
 /// markers become status badges, `key:: value` block properties become muted
-/// property lines, and reading-mode-hidden properties (`id::`, `collapsed::`)
-/// are dropped. Code regions are skipped so fenced/inline code stays verbatim.
+/// property lines, reading-mode-hidden properties (`id::`, `collapsed::`)
+/// are dropped, and `((uuid))` block refs are expanded inline when
+/// `blockResolver` can find the owning block. Code regions are skipped so
+/// fenced/inline code stays verbatim.
 /// Mirrored by QingWuMobile `MobileHtmlRenderer.transformLogseqFlavor` —
 /// change both in the same commit.
-func transformLogseqFlavor(in html: String) -> String {
-    guard html.contains("::") || html.contains("<li") else { return html }
+func transformLogseqFlavor(in html: String, blockResolver: ((String) -> String?)? = nil) -> String {
+    guard html.contains("::") || html.contains("<li") || html.contains("((") else { return html }
 
     let source = html as NSString
     let fullRange = NSRange(location: 0, length: source.length)
@@ -137,13 +147,13 @@ func transformLogseqFlavor(in html: String) -> String {
     for codeRange in codeRanges {
         if codeRange.location > cursor {
             let prose = source.substring(with: NSRange(location: cursor, length: codeRange.location - cursor))
-            result += transformLogseqSegment(prose)
+            result += transformLogseqSegment(prose, blockResolver: blockResolver)
         }
         result += source.substring(with: codeRange)
         cursor = codeRange.location + codeRange.length
     }
     if cursor < source.length {
-        result += transformLogseqSegment(source.substring(from: cursor))
+        result += transformLogseqSegment(source.substring(from: cursor), blockResolver: blockResolver)
     }
 
     // Hidden properties leave marker spans behind; drop them along with their
@@ -159,8 +169,23 @@ func transformLogseqFlavor(in html: String) -> String {
     return cleaned
 }
 
-private func transformLogseqSegment(_ segment: String) -> String {
+private func transformLogseqSegment(_ segment: String, blockResolver: ((String) -> String?)?) -> String {
     let result = NSMutableString(string: segment)
+
+    if segment.contains("(("), let blockResolver {
+        let matches = logseqBlockRefRegex.matches(in: segment, options: [], range: NSRange(location: 0, length: result.length))
+        for match in matches.reversed() {
+            let uuid = result.substring(with: match.range(at: 1))
+            guard let blockText = blockResolver(uuid) else { continue }
+            let escaped = blockText
+                .replacingOccurrences(of: "&", with: "&amp;")
+                .replacingOccurrences(of: "<", with: "&lt;")
+                .replacingOccurrences(of: ">", with: "&gt;")
+            result.replaceCharacters(
+                in: match.range,
+                with: "<span class=\"logseq-blockref\">\(escaped)</span>")
+        }
+    }
 
     if segment.contains("<li") {
         let matches = logseqTaskRegex.matches(in: segment, options: [], range: NSRange(location: 0, length: result.length))

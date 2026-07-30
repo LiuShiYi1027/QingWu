@@ -373,6 +373,13 @@ blockquote blockquote {
   display: none;
 }
 
+.heti .logseq-blockref {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: rgba(9, 105, 218, 0.08);
+  border-bottom: 1px dashed #0969da;
+}
+
 /* Tables */
 .heti table {
   box-sizing: border-box;

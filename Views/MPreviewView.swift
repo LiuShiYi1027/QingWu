@@ -781,12 +781,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let isMagicPPT = UserDefaultsManagement.magicPPT
 
             // Move markdown rendering and image processing to background thread
+            let blockMap = WikilinkIndex.shared.blockIndexSnapshot()
             let rendered: (processedHtml: String, processedMarkdown: String?)? = await Task.detached {
                 if isMagicPPT {
                     let processedMarkdown = HtmlManager.processImagesInMarkdown(markdownString, imagesStorage: imagesStorage)
                     return (processedMarkdown, processedMarkdown)
                 }
-                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
+                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak, blockResolver: { blockMap[$0] }) else {
                     return nil
                 }
                 let processed = HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
@@ -867,8 +868,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
 
             // Phase 1: Render Markdown only (fast, ~20ms) — inject immediately so text is visible
+            let blockMap = WikilinkIndex.shared.blockIndexSnapshot()
             let htmlString = await Task.detached {
-                renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak)
+                renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak, blockResolver: { blockMap[$0] })
             }.value
 
             guard let htmlString else {
@@ -1096,7 +1098,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
         let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
-        guard let htmlString = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
+        guard let htmlString = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak, blockResolver: { WikilinkIndex.shared.resolveBlock($0) }) else {
             throw PreviewError.markdownRenderFailed
         }
 

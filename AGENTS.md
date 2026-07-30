@@ -293,6 +293,13 @@ unless the task targets them.
   commit. Styling uses `--logseq-task-color` variables in
   `typography.css` with explicit dark restatements in `theme-dark.css`;
   `mobile-reader.css` mirrors the same rules.
+- `((uuid))` block refs resolve through a block index in `WikilinkIndex`
+  (`id::` → owning block's first line), passed into `renderMarkdownHTML` as
+  `blockResolver`; background `Task.detached` render paths capture
+  `blockIndexSnapshot()` first (the index is `@MainActor`). iOS mirrors the
+  extraction in `MobileHtmlRenderer.extractLogseqBlocks` but resolves
+  within the current note only — cross-note refs stay literal until a
+  mobile block index exists.
 - Logseq wikilink targets resolve through `WikilinkIndex.canonicalTarget` /
   `titleCandidates` / `resolveAll` (`Business/WikilinkIndex.swift`): alias
   stripping, case-insensitive matching, and `namespace/Page` ↔

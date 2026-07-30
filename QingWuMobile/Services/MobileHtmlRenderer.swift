@@ -14,9 +14,14 @@ enum MobileHtmlRenderer {
         // Without this the fenced block renders as a stray rule + key:value
         // lines at the top of every note that carries one.
         let cleanedMarkdown = String(stripFrontmatter(markdown))
+        // Block refs resolve within the current note for now; macOS resolves
+        // graph-wide via WikilinkIndex. Cross-note refs stay as literal
+        // ((uuid)) until the mobile block index lands.
+        let blockMap = extractLogseqBlocks(from: cleanedMarkdown)
         let body = rewriteWikilinks(
             in: transformLogseqFlavor(
-                in: rewriteLocalAssetPaths(in: markdownToHTML(cleanedMarkdown), assetRoot: assetRoot)))
+                in: rewriteLocalAssetPaths(in: markdownToHTML(cleanedMarkdown), assetRoot: assetRoot),
+                blockResolver: { blockMap[$0] }))
         let hero = heroTitleHTML(noteTitle: title, markdown: cleanedMarkdown)
         let scripts = readerScripts(for: body)
         // Critical: the dynamic --font-size / --font overrides MUST come
@@ -200,8 +205,52 @@ enum MobileHtmlRenderer {
     private static let logseqPropertyRegex = try? NSRegularExpression(
         pattern: #"(<p[^>]*>|<br\s*/?>)\s*([A-Za-z][\w.-]*)::[ \t]*([^\n<]*)"#)
 
-    private static func transformLogseqFlavor(in html: String) -> String {
-        guard html.contains("::") || html.contains("<li"), let codeRegex = codeRegionPattern else { return html }
+    private static let logseqBlockRefRegex = try? NSRegularExpression(
+        pattern: #"\(\(([0-9a-fA-F-]{8,})\)\)"#)
+
+    private static let logseqBlockIDRegex = try? NSRegularExpression(
+        pattern: #"(?m)^[ \t]*id::[ \t]*([0-9a-fA-F-]{8,})[ \t]*$"#)
+
+    private static let logseqPropertyLineRegex = try? NSRegularExpression(
+        pattern: #"^[ \t]*[A-Za-z][\w.-]*::"#)
+
+    /// Mirrors macOS `WikilinkIndex.extractBlocks` — change both in the same
+    /// commit. The block owning an `id::` property is the nearest previous
+    /// non-empty, non-property line.
+    static func extractLogseqBlocks(from content: String) -> [String: String] {
+        guard let idRegex = logseqBlockIDRegex, let propRegex = logseqPropertyLineRegex else { return [:] }
+        let lines = content.components(separatedBy: "\n")
+        var blocks: [String: String] = [:]
+
+        for (index, line) in lines.enumerated() {
+            let nsLine = line as NSString
+            guard let match = idRegex.firstMatch(in: line, range: NSRange(location: 0, length: nsLine.length)),
+                let uuidRange = Range(match.range(at: 1), in: line)
+            else { continue }
+            let uuid = String(line[uuidRange])
+
+            for prev in stride(from: index - 1, through: 0, by: -1) {
+                let candidate = lines[prev]
+                let trimmed = candidate.trimmingCharacters(in: .whitespaces)
+                if trimmed.isEmpty { continue }
+                let nsCandidate = candidate as NSString
+                if propRegex.firstMatch(in: candidate, range: NSRange(location: 0, length: nsCandidate.length)) != nil {
+                    continue
+                }
+                var text = trimmed
+                if text.hasPrefix("- ") {
+                    text = String(text.dropFirst(2)).trimmingCharacters(in: .whitespaces)
+                }
+                blocks[uuid] = text
+                break
+            }
+        }
+
+        return blocks
+    }
+
+    private static func transformLogseqFlavor(in html: String, blockResolver: ((String) -> String?)? = nil) -> String {
+        guard html.contains("::") || html.contains("<li") || html.contains("(("), let codeRegex = codeRegionPattern else { return html }
         let source = html as NSString
         let codeRanges = codeRegex.matches(in: html, range: NSRange(location: 0, length: source.length)).map(\.range)
 
@@ -211,13 +260,13 @@ enum MobileHtmlRenderer {
         for codeRange in codeRanges {
             if codeRange.location > cursor {
                 let prose = source.substring(with: NSRange(location: cursor, length: codeRange.location - cursor))
-                result += transformLogseqSegment(prose)
+                result += transformLogseqSegment(prose, blockResolver: blockResolver)
             }
             result += source.substring(with: codeRange)
             cursor = codeRange.location + codeRange.length
         }
         if cursor < source.length {
-            result += transformLogseqSegment(source.substring(from: cursor))
+            result += transformLogseqSegment(source.substring(from: cursor), blockResolver: blockResolver)
         }
 
         var cleaned = result.replacingOccurrences(
@@ -231,8 +280,23 @@ enum MobileHtmlRenderer {
         return cleaned
     }
 
-    private static func transformLogseqSegment(_ segment: String) -> String {
+    private static func transformLogseqSegment(_ segment: String, blockResolver: ((String) -> String?)?) -> String {
         let result = NSMutableString(string: segment)
+
+        if segment.contains("(("), let blockResolver, let regex = logseqBlockRefRegex {
+            let matches = regex.matches(in: segment, range: NSRange(location: 0, length: result.length))
+            for match in matches.reversed() {
+                let uuid = result.substring(with: match.range(at: 1))
+                guard let blockText = blockResolver(uuid) else { continue }
+                let escaped = blockText
+                    .replacingOccurrences(of: "&", with: "&amp;")
+                    .replacingOccurrences(of: "<", with: "&lt;")
+                    .replacingOccurrences(of: ">", with: "&gt;")
+                result.replaceCharacters(
+                    in: match.range,
+                    with: "<span class=\"logseq-blockref\">\(escaped)</span>")
+            }
+        }
 
         if segment.contains("<li"), let regex = logseqTaskRegex {
             let matches = regex.matches(in: segment, range: NSRange(location: 0, length: result.length))
