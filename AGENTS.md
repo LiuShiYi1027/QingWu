@@ -6,6 +6,14 @@
 >
 > Agent skills for this repo live in `.agents/skills/`:
 > `release`, `appstore`, `lint`, `code-review`, `github-ops`.
+>
+> **Product positioning and scheduling live in `PRODUCT.md` and
+> `ROADMAP.md` — they are the arbiter for every feature decision.** Before
+> proposing or building anything, check it against the positioning and the
+> roadmap's stop-line (停手线): after V1.x, new "Logseq render
+> compatibility" requests default to no and go to the roadmap's parking
+> list (搁置清单). When positioning changes, the docs change first, code
+> second.
 
 ## Project
 
