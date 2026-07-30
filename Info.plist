@@ -126,7 +126,7 @@
 	<key>SUFeedURL</key>
 	<string>https://qingwu.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</string>
+	<string>kJLsYWSLMDM7ayfamffIqKMxwiob34YWcXg80IAOTLQ=</string>
 	<key>SUScheduledCheckInterval</key>
 	<real>3666</real>
 	<key>UILaunchStoryboardName</key>
