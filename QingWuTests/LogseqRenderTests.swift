@@ -113,38 +113,38 @@ final class LogseqRenderTests: XCTestCase {
 
     func testBlockRefExpandsWithResolver() {
         let html = renderMarkdownHTML(
-            markdown: "See ((abc-123))",
+            markdown: "See ((abc-def-1234))",
             useGithubLineBreak: false,
-            blockResolver: { uuid in uuid == "abc-123" ? "the referenced block" : nil })!
+            blockResolver: { uuid in uuid == "abc-def-1234" ? "the referenced block" : nil })!
 
         XCTAssertTrue(html.contains(#"<span class="logseq-blockref">the referenced block</span>"#))
-        XCTAssertFalse(html.contains("((abc-123))"))
+        XCTAssertFalse(html.contains("((abc-def-1234))"))
     }
 
     func testBlockRefStaysLiteralWithoutResolver() {
-        let html = renderMarkdownHTML(markdown: "See ((abc-123))", useGithubLineBreak: false)!
+        let html = renderMarkdownHTML(markdown: "See ((abc-def-1234))", useGithubLineBreak: false)!
 
-        XCTAssertTrue(html.contains("((abc-123))"))
+        XCTAssertTrue(html.contains("((abc-def-1234))"))
         XCTAssertFalse(html.contains("logseq-blockref"))
     }
 
     func testBlockRefStaysLiteralWhenUnknown() {
         let html = renderMarkdownHTML(
-            markdown: "See ((abc-123))",
+            markdown: "See ((abc-def-1234))",
             useGithubLineBreak: false,
             blockResolver: { _ in nil })!
 
-        XCTAssertTrue(html.contains("((abc-123))"))
+        XCTAssertTrue(html.contains("((abc-def-1234))"))
     }
 
     func testBlockRefInsideCodeFenceStaysVerbatim() {
-        let markdown = "```\n((abc-123))\n```"
+        let markdown = "```\n((abc-def-1234))\n```"
         let html = renderMarkdownHTML(
             markdown: markdown,
             useGithubLineBreak: false,
             blockResolver: { _ in "should not appear" })!
 
-        XCTAssertTrue(html.contains("((abc-123))"))
+        XCTAssertTrue(html.contains("((abc-def-1234))"))
         XCTAssertFalse(html.contains("should not appear"))
     }
 }

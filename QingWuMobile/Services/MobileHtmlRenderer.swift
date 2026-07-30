@@ -288,7 +288,8 @@ enum MobileHtmlRenderer {
             for match in matches.reversed() {
                 let uuid = result.substring(with: match.range(at: 1))
                 guard let blockText = blockResolver(uuid) else { continue }
-                let escaped = blockText
+                let escaped =
+                    blockText
                     .replacingOccurrences(of: "&", with: "&amp;")
                     .replacingOccurrences(of: "<", with: "&lt;")
                     .replacingOccurrences(of: ">", with: "&gt;")
