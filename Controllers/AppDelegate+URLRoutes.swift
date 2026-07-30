@@ -163,7 +163,17 @@ extension AppDelegate {
                 }
             }
         } else {
-            vc.toastNoTitle()
+            // Logseq muscle memory: following a dead wikilink creates the
+            // page. New pages land in pages/ when the vault has one, and the
+            // toast makes the creation explicit instead of a silent surprise.
+            let target = WikilinkIndex.canonicalTarget(query)
+            guard !target.isEmpty else {
+                vc.toastNoTitle()
+                return
+            }
+            let pagesProject = vc.storage.getProjects().first { $0.url.lastPathComponent == "pages" }
+            vc.createNote(name: target, project: pagesProject, load: true)
+            vc.toast(message: String(format: I18n.str("Page \"%@\" did not exist, created~"), target))
         }
     }
 

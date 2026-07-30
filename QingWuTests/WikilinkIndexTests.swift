@@ -172,4 +172,31 @@ final class WikilinkIndexTests: XCTestCase {
 
         XCTAssertNil(index.resolveBlock("abc-def-123"))
     }
+
+    // MARK: - Backlink key normalization
+
+    func testBacklinkMergesNamespaceEncodings() {
+        resetIndex()
+        // The page on disk is work___Plans.md (title "work___Plans"); the
+        // link was written Logseq-style as [[work/Plans]].
+        index.updateNote(title: "A", content: "see [[work/Plans]]")
+
+        XCTAssertEqual(index.getBacklinks(for: "work___Plans"), ["A"])
+        XCTAssertEqual(index.getBacklinks(for: "work/Plans"), ["A"])
+    }
+
+    func testBacklinkMergesCaseVariants() {
+        resetIndex()
+        index.updateNote(title: "A", content: "see [[my page]]")
+        index.updateNote(title: "B", content: "also [[My Page]]")
+
+        XCTAssertEqual(Set(index.getBacklinks(for: "My Page")), Set(["A", "B"]))
+    }
+
+    func testBacklinkFromAliasLink() {
+        resetIndex()
+        index.updateNote(title: "A", content: "see [[B|pretty label]]")
+
+        XCTAssertEqual(index.getBacklinks(for: "B"), ["A"])
+    }
 }

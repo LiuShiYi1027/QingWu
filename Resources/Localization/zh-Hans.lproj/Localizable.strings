@@ -301,3 +301,5 @@
 "Created" = "创建";
 "Backlinks" = "反向链接";
 "Project name" = "文件夹名称";
+
+"Page \"%@\" did not exist, created~" = "页面「%@」不存在，已为你创建~";

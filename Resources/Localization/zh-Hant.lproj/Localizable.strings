@@ -278,3 +278,5 @@
 "Created" = "建立";
 "Backlinks" = "反向連結";
 "Project name" = "資料夾名稱";
+
+"Page \"%@\" did not exist, created~" = "頁面「%@」不存在，已為你建立~";

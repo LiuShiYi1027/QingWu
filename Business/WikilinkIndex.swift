@@ -26,7 +26,7 @@ final class WikilinkIndex: ObservableObject {
             outlinks[title] = links
 
             for target in links {
-                inlinks[target, default: []].insert(title)
+                inlinks[Self.normalizeKey(target), default: []].insert(title)
             }
 
             indexBlocks(from: note.content.string, title: title)
@@ -34,7 +34,7 @@ final class WikilinkIndex: ObservableObject {
     }
 
     func getBacklinks(for noteTitle: String) -> [String] {
-        Array(inlinks[noteTitle] ?? []).sorted()
+        Array(inlinks[Self.normalizeKey(noteTitle)] ?? []).sorted()
     }
 
     func getOutlinks(for noteTitle: String) -> [String] {
@@ -44,6 +44,16 @@ final class WikilinkIndex: ObservableObject {
     /// Target group only; an optional `|label` alias (Logseq/Obsidian style)
     /// is matched but never captured, so `[[a|b]]` indexes under `a`.
     private static let wikilinkRegex: NSRegularExpression? = try? NSRegularExpression(pattern: #"\[\[([^\]|]+)(?:\|[^\]]*)?\]\]"#)
+
+    /// Backlink keys are normalized so the same page is found regardless of
+    /// how the link was written: alias stripped, Logseq `___` namespace
+    /// encoding unified with `/`, and case folded. Outlink keys stay exact
+    /// titles (they key per-note state); only inlink keys normalize.
+    static func normalizeKey(_ raw: String) -> String {
+        canonicalTarget(raw)
+            .replacingOccurrences(of: "___", with: "/")
+            .lowercased()
+    }
 
     private func extractWikilinks(from text: String) -> Set<String> {
         guard let regex = Self.wikilinkRegex else {
@@ -68,14 +78,14 @@ final class WikilinkIndex: ObservableObject {
 
         if let oldLinks = outlinks[title] {
             for oldTarget in oldLinks where !links.contains(oldTarget) {
-                inlinks[oldTarget]?.remove(title)
+                inlinks[Self.normalizeKey(oldTarget)]?.remove(title)
             }
         }
 
         outlinks[title] = links
 
         for target in links {
-            inlinks[target, default: []].insert(title)
+            inlinks[Self.normalizeKey(target), default: []].insert(title)
         }
 
         if let oldUUIDs = noteBlocks[title] {
@@ -149,11 +159,11 @@ final class WikilinkIndex: ObservableObject {
     func removeNote(title: String) {
         if let links = outlinks[title] {
             for target in links {
-                inlinks[target]?.remove(title)
+                inlinks[Self.normalizeKey(target)]?.remove(title)
             }
         }
         outlinks.removeValue(forKey: title)
-        inlinks.removeValue(forKey: title)
+        inlinks.removeValue(forKey: Self.normalizeKey(title))
         if let uuids = noteBlocks.removeValue(forKey: title) {
             for uuid in uuids {
                 blockIndex.removeValue(forKey: uuid)

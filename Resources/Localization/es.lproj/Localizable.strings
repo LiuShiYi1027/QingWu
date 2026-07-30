@@ -299,3 +299,5 @@
 "Created" = "Creado";
 "Backlinks" = "Enlaces inversos";
 "Project name" = "Nombre de carpeta";
+
+"Page \"%@\" did not exist, created~" = "La página «%@» no existía; se ha creado~";

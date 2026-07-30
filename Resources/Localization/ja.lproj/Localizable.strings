@@ -301,3 +301,5 @@
 "Created" = "作成";
 "Backlinks" = "バックリンク";
 "Project name" = "フォルダ名";
+
+"Page \"%@\" did not exist, created~" = "ページ「%@」は存在しないため、作成しました~";
