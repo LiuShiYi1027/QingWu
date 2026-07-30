@@ -98,6 +98,7 @@ appcast.xml
 docs/*
 !docs/LOGSEQ_COMPATIBILITY.md
 !docs/LOGSEQ_COMPATIBILITY_EN.md
+!docs/appcast.xml
 index.html
 Resources/DownView.bundle/demo.html
 

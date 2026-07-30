@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>QingWu Updates</title>
+    <link>https://liushiyi1027.github.io/QingWu/appcast.xml</link>
+    <description>Most recent changes with links to updates.</description>
+    <language>en</language>
+    <item>
+      <title>V1.0.0 Phoenix 🌿</title>
+      <link>https://github.com/LiuShiYi1027/QingWu/releases/tag/V1.0.0</link>
+      <sparkle:version>1.0.0</sparkle:version>
+      <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+      <description><![CDATA[
+<h3>Changelog</h3>
+  <ol>
+    <li>QingWu's first release: forked from MiaoYan (MIT) as an independent product, new brand and icon</li>
+    <li>First-class Logseq graph support: open a graph and read it, never writes inside the vault, conflict backups stay in the app directory</li>
+    <li>Logseq syntax rendering: TODO task badges, folded property lines, tab-indented outlines as nested lists</li>
+    <li>Full wikilink resolution: aliases, case-insensitive matching, namespace filename mapping, dead links create pages on click</li>
+    <li>((uuid)) block refs expand inline in preview and export; backlink panel data is unified and accurate</li>
+    <li>Today's Journal quick access (cmd+shift+D) with Logseq-compatible journals/yyyy_MM_dd.md naming</li>
+    <li>Everything MiaoYan had: live preview, slide mode, version history, iCloud sync, LaTeX/Mermaid</li>
+  </ol>
+  <h3>更新日志</h3>
+  <ol>
+    <li>青梧首个版本：基于妙言（MiaoYan，MIT 许可）fork 独立演进，全新品牌与图标</li>
+    <li>Logseq 库一等支持：直接打开 graph 即可阅读，绝不写入库内文件，冲突备份存于应用目录</li>
+    <li>Logseq 语法渲染：TODO 任务徽章、属性行折叠、tab 缩进大纲渲染为多级列表</li>
+    <li>wikilink 完整解析：别名、大小写不敏感、namespace 文件名映射，点击死链自动创建页面</li>
+    <li>((uuid)) 块引用在预览与导出中内联展开，双链面板数据归一准确</li>
+    <li>今日笔记快捷入口（cmd+shift+D），journals/yyyy_MM_dd.md 与 Logseq 命名一致</li>
+    <li>完整继承妙言体验：实时预览、PPT 模式、版本历史、iCloud 同步、LaTeX/Mermaid</li>
+  </ol>
+      ]]></description>
+      <pubDate>Thu, 30 Jul 2026 13:34:50 +0000</pubDate>
+      <enclosure url="https://github.com/LiuShiYi1027/QingWu/releases/download/V1.0.0/QingWu_V1.0.0.zip" sparkle:edSignature="lq/cI9cIczVF3mtfumbtaoZv5odUQY0G4gPtxio6oLYzcAn1MHzO7dqVczLRmkckTv1GMHz8uKCdPFpHk5jfBA==" length="26405876" type="application/octet-stream"/>
+    </item>
+  </channel>
+</rss>
