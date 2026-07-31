@@ -238,7 +238,7 @@ extension ViewController {
     @IBAction func toggleFocusLayout(_ sender: NSMenuItem) {
         // Menu actions target a storyboard-level ViewController whose outlets
         // are nil; forward to the real wired instance (fileMenuNewNote pattern).
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = AppContext.shared.viewController else { return }
         // Manual toggling only changes the layout, never the current note.
         // The Today's Journal home gesture belongs to app launch only.
         vc.applyFocusLayout(!UserDefaultsManagement.focusLayout, openJournal: false)
