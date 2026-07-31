@@ -803,6 +803,10 @@ extension ViewController {
 
     // MARK: - Text Formatting
     func formatText() {
+        if storage.isLogseqVault {
+            toast(message: I18n.str("Auto-format is unavailable in Logseq vaults~"), style: .failure)
+            return
+        }
         if sessionPreviewMode {
             toast(
                 message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure
@@ -938,6 +942,10 @@ extension ViewController {
     /// width, stray em dashes, ASCII ellipsis, and blank-line runs. Pure local
     /// string work, so unlike `formatText` it applies synchronously.
     @IBAction func cleanTypography(_ sender: Any?) {
+        if storage.isLogseqVault {
+            toast(message: I18n.str("Auto-format is unavailable in Logseq vaults~"), style: .failure)
+            return
+        }
         if sessionPreviewMode {
             toast(
                 message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure

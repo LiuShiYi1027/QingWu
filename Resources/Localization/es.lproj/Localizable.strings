@@ -301,3 +301,5 @@
 "Project name" = "Nombre de carpeta";
 
 "Page \"%@\" did not exist, created~" = "La página «%@» no existía; se ha creado~";
+
+"Auto-format is unavailable in Logseq vaults~" = "Formato automático no disponible en grafos de Logseq~";

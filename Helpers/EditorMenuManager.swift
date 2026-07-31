@@ -139,11 +139,19 @@ class EditorMenuManager {
 
     func formatText() {
         guard let vc = ViewController.shared() else { return }
+        guard !Storage.sharedInstance().isLogseqVault else {
+            vc.toast(message: I18n.str("Auto-format is unavailable in Logseq vaults~"))
+            return
+        }
         vc.formatText()
     }
 
     func cleanTypography() {
         guard let vc = ViewController.shared() else { return }
+        guard !Storage.sharedInstance().isLogseqVault else {
+            vc.toast(message: I18n.str("Auto-format is unavailable in Logseq vaults~"))
+            return
+        }
         vc.cleanTypography(nil)
     }
 

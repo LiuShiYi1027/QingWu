@@ -390,6 +390,18 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         menuManager?.cleanTypography()
     }
 
+    /// Menu items targeting this view (Format, Clean Typography) never reach
+    /// ViewController.validateMenuItem, so the Logseq-vault auto-format ban
+    /// must live here too.
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(formatText(_:))
+            || menuItem.action == #selector(cleanTypography(_:))
+        {
+            return !Storage.sharedInstance().isLogseqVault
+        }
+        return true
+    }
+
     @IBAction func togglePresentation(_ sender: Any) {
         menuManager?.togglePresentation()
     }

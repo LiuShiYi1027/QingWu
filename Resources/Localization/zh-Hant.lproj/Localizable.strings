@@ -280,3 +280,5 @@
 "Project name" = "資料夾名稱";
 
 "Page \"%@\" did not exist, created~" = "頁面「%@」不存在，已為你建立~";
+
+"Auto-format is unavailable in Logseq vaults~" = "Logseq 庫裡不提供自動排版~";
