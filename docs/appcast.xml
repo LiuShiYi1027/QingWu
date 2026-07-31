@@ -6,6 +6,31 @@
     <description>Most recent changes with links to updates.</description>
     <language>en</language>
     <item>
+      <title>V1.0.1 Seedling 🌱</title>
+      <link>https://github.com/LiuShiYi1027/QingWu/releases/tag/V1.0.1</link>
+      <sparkle:version>1.0.1</sparkle:version>
+      <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+      <description><![CDATA[
+<h3>Changelog</h3>
+  <ol>
+    <li>New Focus Layout (cmd+shift+K): single content column, chrome recedes, launches into Today's Journal</li>
+    <li>Whole-file auto-format and attachment cleanup are now disabled inside Logseq vaults — the graph owns its formatting, QingWu is only a guest</li>
+    <li>Fixed the Focus Layout vs Format shortcut conflict (was cmd+shift+L)</li>
+    <li>Vault detection: a logseq/config.edn at the storage root marks it as a Logseq graph</li>
+  </ol>
+  <h3>更新日志</h3>
+  <ol>
+    <li>新增专注布局（cmd+shift+K）：单栏内容模式，界面退后，启动自动回到今日笔记</li>
+    <li>Logseq vault 内禁用全文自动排版与附件清理：库拥有格式主权，青梧只做访客</li>
+    <li>修复专注布局与 Format 的快捷键冲突（原 cmd+shift+L）</li>
+    <li>完善 vault 识别：存储根目录存在 logseq/config.edn 即按 Logseq 库对待</li>
+  </ol>
+      ]]></description>
+      <pubDate>Fri, 31 Jul 2026 09:42:20 +0000</pubDate>
+      <enclosure url="https://github.com/LiuShiYi1027/QingWu/releases/download/V1.0.1/QingWu_V1.0.1.zip" sparkle:edSignature="JEFsXXLly/v+02PmgXvdp3DkEnTXSOoCFYYy2GcJUGRoPZpSbC6GqXwrYRkHTAZhVfKqGKZqOxZd9dh/JjIuBA==" length="26413481" type="application/octet-stream"/>
+    </item>
+    <item>
       <title>V1.0.0 Phoenix 🌿</title>
       <link>https://github.com/LiuShiYi1027/QingWu/releases/tag/V1.0.0</link>
       <sparkle:version>1.0.0</sparkle:version>
