@@ -693,6 +693,11 @@ class ViewController:
             return editArea.markdownView != nil && !sessionMagicPPTMode
         }
 
+        if menuItem.action == #selector(toggleFocusLayout(_:)) {
+            menuItem.state = UserDefaultsManagement.focusLayout ? .on : .off
+            return true
+        }
+
         let canUseMenu = UserDefaultsManagement.canUseMenu
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {
@@ -984,6 +989,9 @@ class ViewController:
         // Configure split view for editor content
         configureEditorContentSplitView()
         ensurePanelsVisibleAtStartup()
+        if UserDefaultsManagement.focusLayout {
+            applyFocusLayout(true, openJournal: true)
+        }
         applyModernChromeStyling()
     }
 

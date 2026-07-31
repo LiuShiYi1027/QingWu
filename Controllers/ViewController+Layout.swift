@@ -233,6 +233,37 @@ extension ViewController {
         isNotelistVisible ? hideNoteList(sender) : showNoteList(sender)
     }
 
+    // MARK: - Focus Layout
+
+    @IBAction func toggleFocusLayout(_ sender: NSMenuItem) {
+        // Menu actions target a storyboard-level ViewController whose outlets
+        // are nil; forward to the real wired instance (fileMenuNewNote pattern).
+        guard let vc = ViewController.shared() else { return }
+        // Manual toggling only changes the layout, never the current note.
+        // The Today's Journal home gesture belongs to app launch only.
+        vc.applyFocusLayout(!UserDefaultsManagement.focusLayout, openJournal: false)
+    }
+
+    /// Focus layout: collapse to a single content column; chrome stays hidden
+    /// until summoned with cmd+1/cmd+2. Entering the mode lands on Today's
+    /// Journal when the vault has a journals/ folder — the Logseq home
+    /// gesture. Disabling restores the sidebar and note list.
+    func applyFocusLayout(_ enabled: Bool, openJournal: Bool) {
+        let wasEnabled = UserDefaultsManagement.focusLayout
+        UserDefaultsManagement.focusLayout = enabled
+
+        if enabled {
+            collapseNotelist(saveState: false)
+            if openJournal,
+                storage.getProjects().contains(where: { $0.url.lastPathComponent == "journals" })
+            {
+                openTodaysJournal()
+            }
+        } else if wasEnabled {
+            showSidebar(self)
+        }
+    }
+
     @IBAction func toggleLayoutCycle(_ sender: Any) {
         guard splitView != nil, sidebarSplitView != nil else { return }
 

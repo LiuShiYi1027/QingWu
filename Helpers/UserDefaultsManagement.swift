@@ -155,6 +155,7 @@ public enum UserDefaultsManagement {
         static let AlwaysOnTop = "alwaysOnTop"
         static let HasShownImagePreviewTip = "hasShownImagePreviewTip"
         static let SplitViewMode = "splitViewMode"
+        static let FocusLayout = "focusLayout"
         static let EditorContentSplitPosition = "editorContentSplitPosition"
         static let EditorModeKey = "editorMode"
     }
@@ -863,6 +864,19 @@ public enum UserDefaultsManagement {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .splitViewModeChanged, object: nil)
             }
+        }
+    }
+
+    /// Focus layout: single content column, chrome hidden until summoned.
+    static var focusLayout: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.FocusLayout) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.FocusLayout)
         }
     }
     static var editorContentSplitPosition: Double {

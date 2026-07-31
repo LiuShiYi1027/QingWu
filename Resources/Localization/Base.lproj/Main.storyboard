@@ -283,6 +283,11 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Sep-Before-OnTop"/>
+                                        <menuItem title="Focus Layout" image="rectangle.inset.filled" catalog="system" keyEquivalent="L" identifier="viewMenu.focusLayout" id="Focus-Layout-Menu">
+                                            <connections>
+                                                <action selector="toggleFocusLayout:" target="L4m-js-agn" id="Act-Focus-Layout"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Always On Top" keyEquivalent="t" identifier="viewMenu.alwaysOnTop" id="Always-On-Top-Menu">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
@@ -1295,6 +1300,7 @@ CA
         <image name="pinNote" width="20" height="20"/>
         <image name="project" width="20" height="20"/>
         <image name="square.split.2x1" catalog="system" width="15" height="14"/>
+        <image name="rectangle.inset.filled" catalog="system" width="16" height="14"/>
         <image name="wand.and.rays" catalog="system" width="16" height="16"/>
         <image name="wand.and.sparkles" catalog="system" width="17" height="15"/>
         <namedColor name="divider">

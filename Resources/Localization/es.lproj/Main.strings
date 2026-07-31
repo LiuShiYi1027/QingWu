@@ -206,6 +206,9 @@
 /* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
 "Always-On-Top-Menu.title" = "Siempre Visible";
 
+/* Class = "NSMenuItem"; title = "Focus Layout"; ObjectID = "Focus-Layout-Menu"; */
+"Focus-Layout-Menu.title" = "Diseño de Enfoque";
+
 /* Class = "NSMenuItem"; title = "Pin Note"; ObjectID = "Pin-Menu-Main"; */
 "Pin-Menu-Main.title" = "Fijar Nota";
 
