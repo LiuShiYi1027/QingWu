@@ -26,6 +26,7 @@ QingWu reads Logseq's **files** well: open a graph and you can read, navigate, a
 - **Namespace tree navigation**: pages are listed flat.
 - **Outline collapsing and block dragging**: Logseq's editor interaction layer — rewriting Logseq territory.
 - **`.edn` config, plugins, themes**: neither read nor applied.
+- **Whole-file auto-format**: in a Logseq graph, Format and Clean Typography are disabled in the Edit menu. Both rewrite the entire file, and the graph owns its formatting (tab indentation, `id::` properties) — QingWu does not fight Logseq for it. In plain Markdown folders they work as usual.
 
 If you need those, the right tool is Logseq itself. QingWu serves what comes *after* capturing: reading your graph back and turning it into publishable articles.
 

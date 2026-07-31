@@ -80,6 +80,7 @@ AI 整理消化之类的想法先不排期。等成稿闭环被真实使用验�
 ## 不变的红线
 
 - 绝不写入 Logseq vault 内部文件；冲突备份在应用目录，不在库内
+- **Logseq vault 内不提供全文自动排版**（Prettier / Clean Typography 置灰）：库拥有自己的格式主权（tab 缩进、`id::` 属性），重写库内字节违背信任模型并制造 git 噪音。非 vault 文件夹行为不变
 - 本地优先，不加埋点、不加遥测
 - macOS / iOS 渲染逻辑保持镜像，改动同 commit 双端同步，AGENTS.md 同步更新
 - 新需求先对照 `PRODUCT.md` 的定位；对不上的，默认答案是不做

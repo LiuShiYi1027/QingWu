@@ -42,6 +42,15 @@ class Storage {
     /// `NoteFileStore.ignoredFolderNames` — change both in the same commit.
     static let reservedFolderNames: Set<String> = ["assets", ".cache", "i", ".Trash", "files", "logseq"]
 
+    /// True when the storage root is a Logseq graph (carries
+    /// logseq/config.edn). Whole-file auto-format (Prettier, Clean
+    /// Typography) stays disabled there — the graph owns its formatting,
+    /// and rewriting vault bytes breaks the trust policy and churns git.
+    var isLogseqVault: Bool {
+        guard let root = UserDefaultsManagement.storageUrl else { return false }
+        return FileManager.default.fileExists(atPath: root.appendingPathComponent("logseq/config.edn").path)
+    }
+
     var pinned: Int = 0
 
     private var bookmarks = [URL]()

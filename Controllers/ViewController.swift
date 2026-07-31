@@ -698,6 +698,15 @@ class ViewController:
             return true
         }
 
+        // Whole-file auto-format rewrites every byte; in a Logseq vault the
+        // graph owns formatting (tab indentation, id:: properties), so both
+        // commands stay disabled there.
+        if menuItem.action == #selector(EditTextView.formatText(_:))
+            || menuItem.action == #selector(EditTextView.cleanTypography(_:))
+        {
+            return !storage.isLogseqVault
+        }
+
         let canUseMenu = UserDefaultsManagement.canUseMenu
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {

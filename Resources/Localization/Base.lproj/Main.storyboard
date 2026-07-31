@@ -283,7 +283,7 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Sep-Before-OnTop"/>
-                                        <menuItem title="Focus Layout" image="rectangle.inset.filled" catalog="system" keyEquivalent="L" identifier="viewMenu.focusLayout" id="Focus-Layout-Menu">
+                                        <menuItem title="Focus Layout" image="rectangle.inset.filled" catalog="system" keyEquivalent="K" identifier="viewMenu.focusLayout" id="Focus-Layout-Menu">
                                             <connections>
                                                 <action selector="toggleFocusLayout:" target="L4m-js-agn" id="Act-Focus-Layout"/>
                                             </connections>
