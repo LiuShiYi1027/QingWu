@@ -666,6 +666,18 @@ class ViewController:
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        // Vault-guest bans first: these checks only need storageUrl (no
+        // outlets), so they work even on the storyboard-level instance whose
+        // outlets are nil — which is the target of several main-menu items.
+        if storage.isLogseqVault {
+            if menuItem.action == #selector(EditTextView.formatText(_:))
+                || menuItem.action == #selector(EditTextView.cleanTypography(_:))
+                || menuItem.action == #selector(cleanUnusedAttachments(_:))
+            {
+                return false
+            }
+        }
+
         // Early return if outlets not yet initialized (prevents crash during app launch/accessibility checks)
         guard notesTableView != nil, storageOutlineView != nil, editArea != nil else {
             return true
@@ -696,15 +708,6 @@ class ViewController:
         if menuItem.action == #selector(toggleFocusLayout(_:)) {
             menuItem.state = UserDefaultsManagement.focusLayout ? .on : .off
             return true
-        }
-
-        // Whole-file auto-format rewrites every byte; in a Logseq vault the
-        // graph owns formatting (tab indentation, id:: properties), so both
-        // commands stay disabled there.
-        if menuItem.action == #selector(EditTextView.formatText(_:))
-            || menuItem.action == #selector(EditTextView.cleanTypography(_:))
-        {
-            return !storage.isLogseqVault
         }
 
         let canUseMenu = UserDefaultsManagement.canUseMenu

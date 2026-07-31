@@ -305,3 +305,5 @@
 "Page \"%@\" did not exist, created~" = "ページ「%@」は存在しないため、作成しました~";
 
 "Auto-format is unavailable in Logseq vaults~" = "Logseq グラフ内では自動フォーマットは利用できません~";
+
+"Attachment cleanup is unavailable in Logseq vaults~" = "Logseq グラフ内では添付クリーンアップは利用できません~";

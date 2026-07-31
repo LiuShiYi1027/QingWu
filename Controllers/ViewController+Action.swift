@@ -482,6 +482,14 @@ extension ViewController {
             return
         }
 
+        // Vault-guest principle: orphan cleanup deletes files the graph may
+        // reference in ways we do not parse (../assets links), so it stays
+        // disabled inside Logseq vaults.
+        if storage.isLogseqVault {
+            vc.toast(message: I18n.str("Attachment cleanup is unavailable in Logseq vaults~"), style: .failure)
+            return
+        }
+
         storage.findOrphanAttachments { [weak self, weak vc] orphanAttachments in
             guard let self = self, let vc = vc else { return }
 

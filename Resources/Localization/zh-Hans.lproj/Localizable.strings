@@ -305,3 +305,5 @@
 "Page \"%@\" did not exist, created~" = "页面「%@」不存在，已为你创建~";
 
 "Auto-format is unavailable in Logseq vaults~" = "Logseq 库里不提供自动排版~";
+
+"Attachment cleanup is unavailable in Logseq vaults~" = "Logseq 库里不提供附件清理~";

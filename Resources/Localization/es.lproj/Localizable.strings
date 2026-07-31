@@ -303,3 +303,5 @@
 "Page \"%@\" did not exist, created~" = "La página «%@» no existía; se ha creado~";
 
 "Auto-format is unavailable in Logseq vaults~" = "Formato automático no disponible en grafos de Logseq~";
+
+"Attachment cleanup is unavailable in Logseq vaults~" = "Limpieza de adjuntos no disponible en grafos de Logseq~";
