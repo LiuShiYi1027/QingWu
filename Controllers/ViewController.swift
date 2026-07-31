@@ -665,18 +665,20 @@ class ViewController:
         }
     }
 
+    /// Vault-guest bans: evaluated before the outlets guard because they only
+    /// need storageUrl, so they also work on the storyboard-level instance
+    /// whose outlets are nil (the target of several main-menu items).
+    private func isBannedInLogseqVault(_ menuItem: NSMenuItem) -> Bool {
+        guard storage.isLogseqVault else { return false }
+        return [
+            #selector(EditTextView.formatText(_:)),
+            #selector(EditTextView.cleanTypography(_:)),
+            #selector(cleanUnusedAttachments(_:)),
+        ].contains(menuItem.action)
+    }
+
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        // Vault-guest bans first: these checks only need storageUrl (no
-        // outlets), so they work even on the storyboard-level instance whose
-        // outlets are nil — which is the target of several main-menu items.
-        if storage.isLogseqVault {
-            if menuItem.action == #selector(EditTextView.formatText(_:))
-                || menuItem.action == #selector(EditTextView.cleanTypography(_:))
-                || menuItem.action == #selector(cleanUnusedAttachments(_:))
-            {
-                return false
-            }
-        }
+        if isBannedInLogseqVault(menuItem) { return false }
 
         // Early return if outlets not yet initialized (prevents crash during app launch/accessibility checks)
         guard notesTableView != nil, storageOutlineView != nil, editArea != nil else {
